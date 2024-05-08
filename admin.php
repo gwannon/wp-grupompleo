@@ -17,11 +17,11 @@ function wp_grupompleo_admin_page() { ?>
   } ?>
   <form method="post">
     <b><?php _e("Endpoint Ofertas de trabajo", 'wp-grupompleo'); ?>:</b><br/>
-		<input type="text" name="_calc_pb_clientify_api_key" value="<?php echo get_option("_wp_grupompleo_endpoint_jobs"); ?>" style="width: calc(100% - 20px);" /><br/>
+		<input type="text" name="_wp_grupompleo_endpoint_jobs" value="<?php echo get_option("_wp_grupompleo_endpoint_jobs"); ?>" style="width: calc(100% - 20px);" /><br/>
 		<b><?php _e("Endpoint Buscador de ofertas de trabajo", 'wp-grupompleo'); ?>:</b><br/>
-		<input type="text" name="_calc_pb_clientify_tags" value="<?php echo get_option("_wp_grupompleo_endpoint_search_jobs"); ?>" style="width: calc(100% - 20px);" /><br/>
+		<input type="text" name="_wp_grupompleo_endpoint_search_jobs" value="<?php echo get_option("_wp_grupompleo_endpoint_search_jobs"); ?>" style="width: calc(100% - 20px);" /><br/>
     <b><?php _e("Endpoint Filtros para ofertas de trabajo", 'wp-grupompleo'); ?>:</b><br/>
-		<input type="text" name="_calc_pb_clientify_tags" value="<?php echo get_option("_wp_grupompleo_endpoint_filters"); ?>" style="width: calc(100% - 20px);" /><br/>
+		<input type="text" name="_wp_grupompleo_endpoint_filters" value="<?php echo get_option("_wp_grupompleo_endpoint_filters"); ?>" style="width: calc(100% - 20px);" /><br/>
 		<br/><input type="submit" name="send" class="button button-primary" min-value=" value="<?php _e('Guardar', 'wp-grupompleo'); ?>" />
 	</form>
 <?php }
