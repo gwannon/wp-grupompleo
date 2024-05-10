@@ -17,15 +17,13 @@
 
 /**
  * TODO
- * - Problema contraseña
  * - Preguntar sistema de filtros OR o AND
  * - Metas ofertas
  * - Integrar diseño
  */
 
 define('WP_GRUPOMPLEO_ENDPOINT_JOBS', get_option("_wp_grupompleo_endpoint_jobs"));
-define('WP_GRUPOMPLEO_ENDPOINT_SEARCH_JOBS', get_option("_wp_grupompleo_endpoint_search_jobs"));
-define('WP_GRUPOMPLEO_ENDPOINT_FILTERS', get_option("_wp_grupompleo_endpoint_filters"));
+define('WP_GRUPOMPLEO_ENDPOINT_JOB', get_option("_wp_grupompleo_endpoint_job"));
 define('WP_GRUPOMPLEO_OFFERS_CACHE_FILE', plugin_dir_path(__FILE__).'cache/joboffers.json');
 define('WP_GRUPOMPLEO_FILTERS_CACHE_FILE', plugin_dir_path(__FILE__).'cache/filters.json');
 define('WP_GRUPOMPLEO_ENDPOINT_OFFER_PAGE_ID', get_option("_wp_grupompleo_offer_page_id"));
@@ -113,6 +111,10 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
       foreach($offer as $label => $data) {
         echo "<p><b>".$label."</b>: ".$data."</p>";
       }
+      $extras = json_decode(file_get_contents(WP_GRUPOMPLEO_ENDPOINT_JOB."?cod=" . $offer->Codigo . "&sede=" . $offer->Sede));
+      foreach($extras[0] as $label => $data) {
+        echo "<p><b>".$label."</b>: ".$data."</p>";
+      }
       break;
     }
   }
@@ -126,7 +128,7 @@ function wp_grupompleo_ofertas_portadas_shortcode($params = array(), $content = 
   //TODO
   return ob_get_clean();
 }
-add_shortcode('ofertas-portadas', 'wp_grupompleo_ofertas_portadas_shortcode');
+add_shortcode('ofertas-portada', 'wp_grupompleo_ofertas_portadas_shortcode');
 
 function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content = null) {
   ob_start(); ?>
@@ -137,7 +139,6 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
       foreach ($json as $title => $group) { ?>
       <h3><?=$title?></h3>
       <div class="button-group">
-        
         <?php if($title != 'Ubicacion') { ?>
           <label><input type="radio" name="<?=sanitize_title($title)?>" value="" checked="checked" /> Todas</label>
           <?php foreach ($group as $button) { ?>
@@ -156,8 +157,7 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
     <?php } ?>
   </div>
   <div class="jobs-grid">
-    <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
-    foreach ($json as $offer) { ?>
+    <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));foreach ($json as $offer) { ?>
       <div class="jobs-item delegacion-<?=sanitize_title($offer->Delegacion)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($offer->Puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Delegacion));?>">
         <p class="name"><?=$offer->Puesto?></p>
         <p class="place"><?=$offer->provincia?> - <?=$offer->Ubicacion?></p>
@@ -167,83 +167,10 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
     <?php } ?>
   </div>
   <style>
-    .jobs-item { 
-      width: 25%;
-      box-sizing: border-box;
-      padding: 10px;
-      border: 1px solid black;
-      background-color: white;
-      border-radius: 10px;
-    }
+    <?php echo file_get_contents(plugin_dir_path(__FILE__).'css/style.css'); ?>
   </style>
   <script>
-    var qsRegex;
-    var selectedRadios = [];
-    var iso = jQuery('.jobs-grid').isotope({
-      // options
-      itemSelector: '.jobs-item',
-      layoutMode: 'fitRows',
-      filter: function() {
-        if(qsRegex) {
-          if((jQuery(this).text()+jQuery(this).data("search")).match( qsRegex )) {
-            if(selectedRadios.length === 0) return true;
-            else {
-              var control = 0;  
-              selectedRadios.forEach((element) => {
-                if (jQuery(this).hasClass(element)) control++;
-              });
-              if(control == selectedRadios.length) return true;
-              else return false;
-            }
-          } else {
-            return false;
-          }
-        } else {
-          if(selectedRadios.length === 0) return true;
-            else {
-              var control = 0;  
-              selectedRadios.forEach((element) => {
-                if (jQuery(this).hasClass(element)) control++;
-              });
-              if(control == selectedRadios.length) return true;
-              else return false;
-            }
-          return true;
-        } 
-      },
-    });
-
-    // use value of search field to filter
-    var quicksearch = document.querySelector('.quicksearch');
-    quicksearch.addEventListener( 'keyup', debounce( function() {
-      qsRegex = new RegExp( quicksearch.value, 'gi' );
-      iso.isotope();
-    }, 200 ) );
-
-    // debounce so filtering doesn't happen every millisecond
-    function debounce( fn, threshold ) {
-      var timeout;
-      threshold = threshold || 100;
-      return function debounced() {
-        clearTimeout( timeout );
-        var args = arguments;
-        var _this = this;
-        function delayed() {
-          fn.apply( _this, args );
-        }
-        timeout = setTimeout( delayed, threshold );
-      };
-    }
-
-    document.querySelectorAll("input[type='radio'],select").forEach((element) => {
-      element.addEventListener('change',function(){
-        selectedRadios = [];
-        document.querySelectorAll("input[type='radio']:checked,select").forEach((element) => {
-          if(element.value!= '') selectedRadios.push(element.value);
-        });
-        iso.isotope();
-      });
-    });
+    <?php echo file_get_contents(plugin_dir_path(__FILE__).'js/isotope.js'); ?>
   </script>
   <?php return ob_get_clean();
 }

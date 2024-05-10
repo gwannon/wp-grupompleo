@@ -1,0 +1,8 @@
+.jobs-item { 
+  width: 25%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 10px;
+}
