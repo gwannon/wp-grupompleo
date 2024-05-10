@@ -17,7 +17,7 @@
 
 /**
  * TODO
- * - Filtro por ciudades
+ * - Problema contraseña
  * - Preguntar sistema de filtros OR o AND
  * - Metas ofertas
  * - Integrar diseño
@@ -137,18 +137,20 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
       foreach ($json as $title => $group) { ?>
       <h3><?=$title?></h3>
       <div class="button-group">
-        <label><input type="radio" name="<?=sanitize_title($title)?>" value="" checked="checked" /> Todas</label>
-        <?php if($title != 'Ubicacion') { 
-          foreach ($group as $button) { ?>
+        
+        <?php if($title != 'Ubicacion') { ?>
+          <label><input type="radio" name="<?=sanitize_title($title)?>" value="" checked="checked" /> Todas</label>
+          <?php foreach ($group as $button) { ?>
           <label><input type="radio" name="<?=sanitize_title($title)?>" value="<?=sanitize_title($title); ?>-<?=sanitize_title($button); ?>" /> <?=$button?></label>
         <?php } } else { ?>
           <select name="<?=sanitize_title($title)?>">
-          <?php foreach ($group as $label => $cities) { ?>
-            <option value="provincia-<?=sanitize_title($label); ?>"><?=$label?></option>
-            <?php foreach ($cities as $city) { ?>
-              <option value="ubicacion-<?=sanitize_title($city); ?>"> ∟ <?=$city?></option>
-          <?php } } ?>
-            </select>
+            <option value="">Todas</option>
+            <?php foreach ($group as $label => $cities) { ?>
+              <option value="provincia-<?=sanitize_title($label); ?>"><?=$label?></option>
+              <?php foreach ($cities as $city) { ?>
+                <option value="ubicacion-<?=sanitize_title($city); ?>"> ∟ <?=$city?></option>
+            <?php } } ?>
+          </select>
         <?php } ?>
       </div>
     <?php } ?>
@@ -156,7 +158,7 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
   <div class="jobs-grid">
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
     foreach ($json as $offer) { ?>
-      <div class="jobs-item delegacion-<?=sanitize_title($offer->Delegacion)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>">
+      <div class="jobs-item delegacion-<?=sanitize_title($offer->Delegacion)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($offer->Puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Delegacion));?>">
         <p class="name"><?=$offer->Puesto?></p>
         <p class="place"><?=$offer->provincia?> - <?=$offer->Ubicacion?></p>
         <p class="type"><?=$offer->Tipo?> - <?=$offer->Delegacion?></p>
@@ -183,7 +185,7 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
       layoutMode: 'fitRows',
       filter: function() {
         if(qsRegex) {
-          if(jQuery(this).text().match( qsRegex )) {
+          if((jQuery(this).text()+jQuery(this).data("search")).match( qsRegex )) {
             if(selectedRadios.length === 0) return true;
             else {
               var control = 0;  
