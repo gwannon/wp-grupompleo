@@ -37,7 +37,8 @@ var iso = jQuery('.jobs-grid').isotope({
 // use value of search field to filter
 var quicksearch = document.querySelector('.quicksearch');
 quicksearch.addEventListener( 'keyup', debounce( function() {
-  qsRegex = new RegExp( quicksearch.value, 'gi' );
+  console.log(quicksearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""));
+  qsRegex = new RegExp( quicksearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""), 'gi' );
   iso.isotope();
 }, 200 ) );
 
@@ -64,4 +65,18 @@ document.querySelectorAll("input[type='radio'],select").forEach((element) => {
     });
     iso.isotope();
   });
+});
+
+jQuery( document ).ready(function() {
+  console.log("LOAD");
+  selectedRadios = [];
+  document.querySelectorAll("input[type='radio']:checked,select").forEach((element) => {
+    if(element.value!= '') selectedRadios.push(element.value);
+  });
+  iso.isotope();
+});
+
+
+jQuery(window).on("resize", function(event){
+  iso.isotope();
 });

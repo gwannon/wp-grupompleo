@@ -1,8 +1,69 @@
 .jobs-item { 
-  width: 25%;
+  width: calc(100% - 40px);
   box-sizing: border-box;
-  padding: 10px;
-  border: 1px solid black;
+  box-shadow: rgb(113, 111, 104) 10px 5px 24px -19px;
   background-color: white;
   border-radius: 10px;
+  margin: 20px;
+}
+
+@media (min-width: 600px) {
+  .jobs-item { 
+    width: calc(50% - 40px);
+  }
+}
+
+@media (min-width: 900px) {
+  .jobs-item { 
+    width: calc(25% - 40px);
+  }
+}
+
+@media (min-width: 1200px) {
+  .jobs-item { 
+    width: calc(20% - 40px);
+  }
+}
+
+.jobs-item > * {
+  padding: 10px; 
+}
+
+.jobs-item > p:first-of-type {
+  font-size:20px;
+  text-align:center;
+  font-weight: 700;
+  border-bottom: 1px solid #ededed;
+}
+
+.jobs-item > p:first-of-type > span {
+  font-weight: 400;
+  font-style: italic;
+}
+
+.jobs-item > p:nth-of-type(3) {
+  text-align:center;
+  font-weight: 500;
+  color: #000;
+  font-size:20px;
+  line-height: 120%;
+}
+
+.jobs-item > a {
+  text-align: center;
+  color: #000;
+  font-weight: 700;
+  background-color: #fcc501;
+  width: 100%;
+  font-size: 19px;
+  display: block;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border: 2px solid #fcc501;
+  transition: all 0.3s;
+}
+
+.jobs-item > a:hover {
+  background-color: #fff;
+  color: #fcc501;
 }
