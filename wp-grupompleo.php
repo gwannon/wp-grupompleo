@@ -49,9 +49,9 @@ function wp_grupompleo_ofertas_cache() {
     $json = file_get_contents(WP_GRUPOMPLEO_ENDPOINT_JOBS);
     file_put_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE, $json);
     $filters = [
-      'Delegacion' => [],
-      'Tipo' => [],
+      'Sede' => [],
       'Ubicacion' => [],
+      'Tipo' => [],
     ];
     foreach (json_decode($json, true) as $job) {
       foreach($filters as $label => $filter) {
@@ -125,25 +125,21 @@ add_filter( 'the_title', 'wp_grupompleo_oferta_title', 10, 2 );
 function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
   ob_start(); 
   $codigo = explode("-", get_query_var('oferta_codigo'))[0];
-  $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
-  foreach ($json as $offer) { 
-    if($offer->Codigo == $codigo) {
-      echo "<h1>".$offer->Puesto." en ".$offer->Ubicacion."</h1>";
-      foreach($offer as $label => $data) {
-        echo "<p><b>".$label."</b>: ".$data."</p>";
-      }
-      $extras = json_decode(file_get_contents(WP_GRUPOMPLEO_ENDPOINT_JOB."?cod=" . $offer->Codigo . "&sede=" . $offer->Sede));
-      foreach($extras[0] as $label => $data) {
-        echo "<p><b>".$label."</b>: ".$data."</p>";
-      }
-      break;
-    }
+  $extras = json_decode(file_get_contents(WP_GRUPOMPLEO_ENDPOINT_JOB."?cod=" . $codigo));
+  $extras[0]->{"Codigo"} = $codigo;
+  $extras[0]->{"Puesto"} = $extras[0]->OFPUESTOVACANTE;
+  $extras[0]->{"provincia"} = $extras[0]->OFPROVINCIA;
+  $extras[0]->{"Ubicacion"} = $extras[0]->OFUBICACION;
+  print_r($extras[0]);
+
+  echo "<h1>".$extras[0]->OFPUESTOVACANTE." en ".$extras[0]->OFUBICACION."</h1>";
+  foreach($extras[0] as $label => $data) {
+    echo "<p><b>".$label."</b>: ".$data."</p>";
   }
-  wp_grupompleo_generate_schema ($offer, $extras[0]);
+  wp_grupompleo_generate_schema ($extras[0]);
   return ob_get_clean();
 }
 add_shortcode('oferta', 'wp_grupompleo_oferta_shortcode');
-
 
 function wp_grupompleo_ofertas_portadas_shortcode($params = array(), $content = null) {
   ob_start(); ?>
@@ -180,10 +176,16 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
       <h3><?=$title?></h3>
       <div class="button-group">
         <?php if($title != 'Ubicacion') { ?>
-          <label><input type="radio" name="<?=sanitize_title($title)?>" value="" checked="checked" /> Todas</label>
-          <?php foreach ($group as $button) { $sanitize_title = sanitize_title($title); ?>
-          <label><input type="radio" name="<?=$sanitize_title?>" value="<?=$sanitize_title; ?>-<?=sanitize_title($button); ?>"<?=(isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] == sanitize_title($button) ? " checked='checked'" : "")?>/> <?=$button?></label>
-        <?php } } else { ?>
+          <select name="<?=sanitize_title($title)?>">
+            <option value="">Todas</option>
+            <?php foreach ($group as $button) { $sanitize_title = sanitize_title($title); ?>
+            <option value="<?=$sanitize_title; ?>-<?=sanitize_title($button); ?>"<?=(isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] == sanitize_title($button) ? " selected='selected'" : "")?>><?=$button?></option>
+            <?php /* <label><input type="radio" name="<?=sanitize_title($title)?>" value="" checked="checked" /> Todas</label>
+            <?php foreach ($group as $button) { $sanitize_title = sanitize_title($title); ?>
+            <label><input type="radio" name="<?=$sanitize_title?>" value="<?=$sanitize_title; ?>-<?=sanitize_title($button); ?>"<?=(isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] == sanitize_title($button) ? " checked='checked'" : "")?>/> <?=$button?></label> */ ?>
+          <?php } ?>
+          </select>
+        <?php  } else { ?>
           <select name="<?=sanitize_title($title)?>">
             <option value="">Todas</option>
             <?php foreach ($group as $label => $cities) { ?>
@@ -198,7 +200,7 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
   </div>
   <div class="jobs-grid">
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));foreach ($json as $offer) { ?>
-      <div class="jobs-item delegacion-<?=sanitize_title($offer->Delegacion)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($offer->Puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Delegacion));?>">
+      <div class="jobs-item sede-<?=sanitize_title($offer->Sede)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($offer->Puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Sede));?>">
         <p><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($offer->Delegacion))?></p>
         <p class="place"><?=$offer->provincia?><br/><?=ucfirst(mb_strtolower($offer->Ubicacion))?></p>
         <p class="name"><?=mb_strtolower($offer->Puesto)?></p>

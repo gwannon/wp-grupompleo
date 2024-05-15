@@ -59,7 +59,7 @@ add_filter( 'wpseo_robots', 'wp_grupompleo_filter_wpseo_robots');
 
 
 //Schema Jobs 
-function wp_grupompleo_generate_schema ($offer, $extras) { ?>
+function wp_grupompleo_generate_schema ($extras) { ?>
   <!-- JOB SCHEMA -->
 <script type="application/ld+json">
 	{
@@ -96,14 +96,9 @@ function wp_grupompleo_generate_schema ($offer, $extras) { ?>
 			"@type" : "OccupationalExperienceRequirements",
 			"monthsOfExperience" : "12",
 			"description"        : " Formación: Grado\n\n Idiomas: Inglés\n: C1\n Conocimientos: -	Nivel avanzado de Excel\n Experiencia: 1 año\n"
-		}
-		,"responsibilities" : "- Recogida de datos y fichas técnicas de los productos actuales para cumplimentar plantillas técnicas.
-- Creación y actualización de documentación técnica y de certificados de componentes mecánicas, eléctricos e hidráulicos.
-- Análisis y control de los datos mediante Excel.
-- Gestión y contacto directo con fábricas, proveedores y representadas."		,"jobBenefits" : "- Incorporación en una de las empresas clave del sector.
-- Incorporación inmediata.
-- Posibilidad de continuidad.
-- Salario competitivo."				,"baseSalary"         : {
+		},
+    "responsibilities"   : "<?php echo $extras->OFFUNCIONES; ?>",
+    "baseSalary"         : {
 			"@type"             : "MonetaryAmount",
 			"currency"          : "EUR",
 			"value"             : {
