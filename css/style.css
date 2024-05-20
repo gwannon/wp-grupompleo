@@ -5,6 +5,8 @@
   background-color: white;
   border-radius: 10px;
   margin: 20px;
+  padding-bottom: 56px;
+  position: relative;
 }
 
 @media (min-width: 600px) {
@@ -50,6 +52,9 @@
 }
 
 .jobs-item > a {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
   text-align: center;
   color: #000;
   font-weight: 700;
@@ -66,4 +71,35 @@
 .jobs-item > a:hover {
   background-color: #fff;
   color: #fcc501;
+}
+
+.button-group select {
+  width: 100%;
+}
+
+.button-group label.hidden {
+  display: none;
+}
+
+#noresults {
+  background-color: red;
+  padding: 20px;
+  border-radius: 30px;
+  font-size: 30px;
+  color: #ffffff;
+  display: none;
+}
+
+#noresults.show {
+  display: block;
+}
+
+
+.filters-button-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.filters-button-group > * {
+  width: 25%;
 }

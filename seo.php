@@ -19,7 +19,7 @@ add_filter('wpseo_opengraph_desc', 'wp_grupompleo_filter_wpseo_title');
 add_filter('wpseo_opengraph_title', 'wp_grupompleo_filter_wpseo_title');
 
 function  wp_grupompleo_filter_wpseo_title($title) {
-  if(is_page(WP_GRUPOMPLEO_ENDPOINT_OFFER_PAGE_ID) ) {
+  if(is_page(WP_GRUPOMPLEO_OFFER_PAGE_ID) ) {
     $codigo = explode("-", get_query_var('oferta_codigo'))[0];
     $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
     foreach ($json as $offer) { 
@@ -37,7 +37,7 @@ function  wp_grupompleo_filter_wpseo_title($title) {
 add_filter('wpseo_canonical', 'wp_grupompleo_filter_wpseo_canonical');
 add_filter('wpseo_opengraph_url', 'wp_grupompleo_filter_wpseo_canonical');
 function wp_grupompleo_filter_wpseo_canonical ($canonical) { 
-  if(is_page(WP_GRUPOMPLEO_ENDPOINT_OFFER_PAGE_ID) ) {
+  if(is_page(WP_GRUPOMPLEO_OFFER_PAGE_ID) ) {
     $codigo = explode("-", get_query_var('oferta_codigo'))[0];
     $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
     foreach ($json as $offer) { 
@@ -51,7 +51,7 @@ function wp_grupompleo_filter_wpseo_canonical ($canonical) {
 }
 
 function wp_grupompleo_filter_wpseo_robots($output) {
-  if(is_page(WP_GRUPOMPLEO_ENDPOINT_OFFER_PAGE_ID) && get_query_var('oferta_codigo') != '') return "INDEX,FOLLOW";
+  if(is_page(WP_GRUPOMPLEO_OFFER_PAGE_ID) && get_query_var('oferta_codigo') != '') return "INDEX,FOLLOW";
   return $output;
 }
 
@@ -65,7 +65,7 @@ function wp_grupompleo_generate_schema ($extras) { ?>
 	{
 		"@context"            : "http://schema.org/",
 		"@type"               : "JobPosting",
-		"identifier"          : "2775470",
+		"identifier"          : "<?php echo $extras->Codigo; ?>",
 		"url"                 : "<?php echo wp_grupompleo_offer_permalink($offer); ?>",
 		"image"               : "https://dghqs88jwcgws.cloudfront.net/wp-content/plugins/rand-job-search/public/img/logo-randstad-stacked-diap-medium.png?x68837",
 		"title"               : "<?php echo $extras->OFPUESTOVACANTE; ?>",
@@ -85,17 +85,16 @@ function wp_grupompleo_generate_schema ($extras) { ?>
 			"@type"             : "Place",
 			"address"           : {
         "@type"           : "PostalAddress",
-        "postalCode"      : "08167",
         "streetAddress"   : "not informed",
-        "addressLocality" : "Polinyà",
-        "addressRegion"   : "Barcelona",
+        "addressLocality" : "<?php echo $extras->OFUBICACION ?>",
+        "addressRegion"   : "<?php echo $extras->OFPROVINCIA ?>",
         "addressCountry"  : "ES"
       }
 		},
 		"experienceRequirements" : {
 			"@type" : "OccupationalExperienceRequirements",
 			"monthsOfExperience" : "12",
-			"description"        : " Formación: Grado\n\n Idiomas: Inglés\n: C1\n Conocimientos: -	Nivel avanzado de Excel\n Experiencia: 1 año\n"
+			"description"        : " Formación: <?=$extras->OFFORMACIONBASE;?>\n\n Idiomas: <?=$extras->OFIDIOMAS;?>\n\n Conocimientos informatica: <?=$extras->OFINFORMATICA;?>\n Competencias: <?=$extras->OFCOMPETENCIAS;?>\n"
 		},
     "responsibilities"   : "<?php echo $extras->OFFUNCIONES; ?>",
     "baseSalary"         : {
