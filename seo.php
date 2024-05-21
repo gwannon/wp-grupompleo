@@ -59,54 +59,64 @@ add_filter( 'wpseo_robots', 'wp_grupompleo_filter_wpseo_robots');
 
 
 //Schema Jobs 
-function wp_grupompleo_generate_schema ($extras) { ?>
+function wp_grupompleo_generate_schema ($extras) { 
+  
+  if($extras->OFSALARIO == 0) {
+    $salario = 0;
+  } elseif($extras->OFSALARIO > 0 && $extras->OFSALARIO < 500) {
+    $salario = number_format($extras->OFSALARIO,2,'.','');
+    $tiempo = "HOUR";
+  } elseif($extras->OFSALARIO >= 500 && $extras->OFSALARIO < 5000) {
+    $salario = number_format($extras->OFSALARIO,0,'.','');
+    $tiempo = "MONTH";
+  } elseif($extras->OFSALARIO >= 5000) {
+    $salario = number_format($extras->OFSALARIO,0,'.','');
+    $tiempo = "YEAR";
+  }; ?>
   <!-- JOB SCHEMA -->
-<script type="application/ld+json">
-	{
-		"@context"            : "http://schema.org/",
-		"@type"               : "JobPosting",
-		"identifier"          : "<?php echo $extras->Codigo; ?>",
-		"url"                 : "<?php echo wp_grupompleo_offer_permalink($offer); ?>",
-		"image"               : "https://dghqs88jwcgws.cloudfront.net/wp-content/plugins/rand-job-search/public/img/logo-randstad-stacked-diap-medium.png?x68837",
-		"title"               : "<?php echo $extras->OFPUESTOVACANTE; ?>",
-		"description"         : "<?php echo $extras->OFDESCRIPCION; ?>",
-		"industry"            : "Ingeniería",
-		"datePosted"          : "2024-05-13T10:16:28",
-		"validThrough"        : "2024-11-13T10:16:28",
-		"employmentType"      : "TEMPORARY",
-		"occupationalCategory": "Ingeniería, Ingenieria y Oficina técnica",
-		"workHours"           : "4 hours",
-		"directApply"     : true,
-		"hiringOrganization"  : {
-			"@type"             : "Organization",
-			"name"              : "GRUPOMPLEO EMPRESA DE TRABAJO TEMPORAL S.L."
-		},
-		"jobLocation"         : {
-			"@type"             : "Place",
-			"address"           : {
-        "@type"           : "PostalAddress",
-        "streetAddress"   : "not informed",
-        "addressLocality" : "<?php echo $extras->OFUBICACION ?>",
-        "addressRegion"   : "<?php echo $extras->OFPROVINCIA ?>",
-        "addressCountry"  : "ES"
+  <script type="application/ld+json">
+    {
+      "@context"            : "http://schema.org/",
+      "@type"               : "JobPosting",
+      "identifier"          : "<?php echo $extras->Codigo; ?>",
+      "url"                 : "<?php echo wp_grupompleo_offer_permalink($offer); ?>",
+      "image"               : "<?php echo content_url(); ?>/webp-express/webp-images/uploads/2023/12/Logo-Grupompleo-02.png.webp",
+      "title"               : "<?php echo $extras->OFPUESTOVACANTE; ?>",
+      "description"         : "<?php echo str_replace(array("\r", "\n"), '', trim($extras->OFDESCRIPCION)); ?>",
+      "industry"            : "Ingeniería",
+      "datePosted"          : "2024-05-13T10:16:28",
+      "employmentType"      : "<?php echo ($extras->OFTIPO == 'ett' ? "temporary" : "contract"); ?>",
+      "hiringOrganization"  : {
+        "@type"             : "Organization",
+        "name"              : "GRUPOMPLEO EMPRESA DE TRABAJO TEMPORAL S.L."
+      },
+      "jobLocation"         : {
+        "@type"             : "Place",
+        "address"           : {
+          "@type"           : "PostalAddress",
+          "streetAddress"   : "not informed",
+          "addressLocality" : "<?php echo $extras->OFUBICACION ?>",
+          "addressRegion"   : "<?php echo $extras->OFPROVINCIA ?>",
+          "addressCountry"  : "ES"
+        }
+      },
+      "experienceRequirements" : {
+        "@type" : "OccupationalExperienceRequirements",
+        "description"        : "<?php echo (trim($extras->OFFORMACIONBASE) != '' ? "Formación: ".str_replace(array("\r", "\n"), '', trim($extras->OFFORMACIONBASE))."<br/>" : ""); ?><?php echo (trim($extras->OFIDIOMAS) != '' ? "Idiomas: ".str_replace(array("\r", "\n"), '', trim($extras->OFIDIOMAS))."<br/>" : ""); ?><?php echo (trim($extras->OFINFORMATICA) != '' ? "Conocimientos informatica: ".str_replace(array("\r", "\n"), '', trim($extras->OFINFORMATICA))."<br/>" : ""); ?><?php echo (trim($extras->OFCOMPETENCIAS) != '' ? "Competencias: ".str_replace(array("\r", "\n"), '', trim($extras->OFCOMPETENCIAS))."<br/>" : ""); ?>"
+      },
+      "responsibilities"   : "<?php echo str_replace(array("\r", "\n"), '', trim($extras->OFFUNCIONES)); ?>",
+      <?php if($salario > 0) { ?>
+      "baseSalary"         : {
+        "@type"             : "MonetaryAmount",
+        "currency"          : "EUR",
+        "value"             : {
+          "@type"           : "QuantitativeValue",
+          "minValue"        : <?=$salario;?>,
+          "maxValue"        : <?=$salario;?>,
+          "unitText"        : "<?=$tiempo;?>"
+        }
       }
-		},
-		"experienceRequirements" : {
-			"@type" : "OccupationalExperienceRequirements",
-			"monthsOfExperience" : "12",
-			"description"        : " Formación: <?=$extras->OFFORMACIONBASE;?>\n\n Idiomas: <?=$extras->OFIDIOMAS;?>\n\n Conocimientos informatica: <?=$extras->OFINFORMATICA;?>\n Competencias: <?=$extras->OFCOMPETENCIAS;?>\n"
-		},
-    "responsibilities"   : "<?php echo $extras->OFFUNCIONES; ?>",
-    "baseSalary"         : {
-			"@type"             : "MonetaryAmount",
-			"currency"          : "EUR",
-			"value"             : {
-				"@type"           : "QuantitativeValue",
-				"minValue"        : 25000,
-				"maxValue"        : 35000,
-				"unitText"        : "YEAR"
-			}
-		}
-			}
-</script><?php 
+      <?php } ?>
+    }
+  </script><?php 
 }

@@ -90,6 +90,15 @@ document.querySelectorAll("input[type='radio'],input[type='checkbox'],select").f
   });
 });
 
+jQuery(".button-group *:is(input[type=text],select)").on("change", function() {
+  if(jQuery(this).val() != '') jQuery(this).addClass("selected");
+  else jQuery(this).removeClass("selected");
+});
+jQuery(".button-group *:is(input[type=checkbox])").on("change", function() {
+  if(jQuery(this).prop("checked")) jQuery(this).addClass("selected");
+  else jQuery(this).removeClass("selected");
+});
+
 jQuery( document ).ready(function() {
   selectedRadios = [];
   document.querySelectorAll("input[type='radio']:checked,select").forEach((element) => {
@@ -116,13 +125,13 @@ function layoutComplete() {
     }
   });
   jQuery('.jobs-item').css("min-height", minheight + "px");
-  console-log("min-height: "+ minheight + "px");
 
   if(jQuery('.jobs-grid').data('isotope').filteredItems.length == 0) {
-    console.log("NO hay resultados");
     jQuery("#noresults").addClass("show");
+    if(jQuery(".quicksearch").val() != '') jQuery("#noresults p:first-of-type span").text(' "'+jQuery(".quicksearch").val()+'"')
   } else {
     jQuery("#noresults").removeClass("show");
+    jQuery("#noresults p:first-of-type span").text("")
   }
 
 }
