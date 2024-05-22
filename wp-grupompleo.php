@@ -241,6 +241,10 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
     <style>
       <?php echo file_get_contents(plugin_dir_path(__FILE__).'css/style.css'); ?>
     </style>
+    <script type="text/javascript" src="<?php echo plugin_dir_url(__FILE__).'js/jquery.simple-scroll-follow.min.js'; ?>" id="jquery.simple-scroll-follow"></script>
+    <script>
+      jQuery('.ofcontent > div:first-of-type').simpleScrollFollow();
+    </script>
     <?php wp_grupompleo_generate_schema ($extras[0]);
   }
   return ob_get_clean();
