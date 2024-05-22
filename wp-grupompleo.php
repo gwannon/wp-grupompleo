@@ -136,28 +136,33 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
     $extras[0]->{"provincia"} = $extras[0]->OFPROVINCIA;
     $extras[0]->{"Ubicacion"} = $extras[0]->OFUBICACION; ?>
     <div class="ofheader">
-      <div><a href="<?php echo get_home_url(); ?>">home</a> - <a href="<?php echo get_the_permalink(WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID); ?>">ofertas de empleo</a> - <?php echo $extras[0]->OFPUESTOVACANTE; ?></a></div>
-      <h1><?php printf(__('%s en %s', "wp-gruprompleo"), $extras[0]->OFPUESTOVACANTE, $extras[0]->OFUBICACION);?></h1>
-      <?php if($extras[0]->OFSALARIO == 0) {
-          $salario = __('según valía', "");
-        } elseif($extras[0]->OFSALARIO > 0 && $extras[0]->OFSALARIO < 500) {
-          $salario = sprintf(__('%s €/hora', "wp-gruprompleo"), number_format($extras[0]->OFSALARIO,2,',','.'));
-        } elseif($extras[0]->OFSALARIO >= 500 && $extras[0]->OFSALARIO < 5000) {
-          $salario = sprintf(__('%s €/mes', "wp-gruprompleo"), number_format($extras[0]->OFSALARIO,0,',','.'));
-        } elseif($extras[0]->OFSALARIO >= 5000) {
-          $salario = sprintf(__('%s €/anuales', "wp-gruprompleo"), number_format($extras[0]->OFSALARIO,0,',','.'));
-        }; ?>
-      <h2><i class="fa-euro-sign fas"></i> <?php echo $salario ?> <i class="fa-calendar-alt fas"></i> <?php echo date("d/m/Y", strtotime($extras[0]->OFFECHA)); ?></h2>  
+      <div>
+        <div><a href="<?php echo get_home_url(); ?>">home</a> - <a href="<?php echo get_the_permalink(WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID); ?>">ofertas de empleo</a> - <?php echo $extras[0]->OFPUESTOVACANTE; ?></a></div>
+        <h1><?php printf(__('%s en %s', "wp-gruprompleo"), $extras[0]->OFPUESTOVACANTE, $extras[0]->OFUBICACION);?></h1>
+        <?php
+          if (!is_numeric($extras[0]->OFSALARIO)) $extras[0]->OFSALARIO = intval($extras[0]->OFSALARIO);
+          if($extras[0]->OFSALARIO == 0) {
+            $salario = __('según valía', "");
+          } elseif($extras[0]->OFSALARIO > 0 && $extras[0]->OFSALARIO < 500) {
+            $salario = sprintf(__('%s €/hora', "wp-gruprompleo"), number_format($extras[0]->OFSALARIO,2,',','.'));
+          } elseif($extras[0]->OFSALARIO >= 500 && $extras[0]->OFSALARIO < 5000) {
+            $salario = sprintf(__('%s €/mes', "wp-gruprompleo"), number_format($extras[0]->OFSALARIO,0,',','.'));
+          } elseif($extras[0]->OFSALARIO >= 5000) {
+            $salario = sprintf(__('%s €/anuales', "wp-gruprompleo"), number_format($extras[0]->OFSALARIO,0,',','.'));
+          };
+        ?>
+        <h2><i class="fa-euro-sign fas"></i> <?php echo $salario ?> <i class="fa-calendar-alt fas"></i> <?php echo date("d/m/Y", strtotime($extras[0]->OFFECHA)); ?></h2>  
 
-      <div class="shareoffer">
-        <span><a href="https://www.facebook.com/sharer.php?u=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>&amp;quote=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>" target="_blank" rel="noreferrer" title="" aria-label="Facebook" data-placement="top" data-toggle="tooltip" data-title="Facebook" data-="" data-original-title="Facebook"><i class="fusion-social-network-icon fusion-tooltip fusion-facebook awb-icon-facebook" style="color:#ffffff;" aria-hidden="true"></i></a></span>
-        <span><a href="https://twitter.com/share?text=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>&amp;url=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>" target="_blank" rel="noopener noreferrer" title="" aria-label="X" data-placement="top" data-toggle="tooltip" data-title="X" data-="" data-original-title="X"><i class="fusion-social-network-icon fusion-tooltip fusion-twitter awb-icon-twitter" style="color:#ffffff;" aria-hidden="true"></i></a></span>
-        <span><a href="https://www.linkedin.com/shareArticle?url=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>&amp;title=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>&amp;summary=<?php echo urlencode(trim($extras[0]->OFDESCRIPCION)); ?>" target="_blank" rel="noopener noreferrer" title="" aria-label="LinkedIn" data-placement="top" data-toggle="tooltip" data-title="LinkedIn" data-="" data-original-title="LinkedIn"><i class="fusion-social-network-icon fusion-tooltip fusion-linkedin awb-icon-linkedin" style="color:#ffffff;" aria-hidden="true"></i></a></span>
-        <span><a href="https://api.whatsapp.com/send?text=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>" target="_blank" rel="noopener noreferrer" title="" aria-label="WhatsApp" data-placement="top" data-toggle="tooltip" data-title="WhatsApp" data-="" data-original-title="WhatsApp"><i class="fusion-social-network-icon fusion-tooltip fusion-whatsapp awb-icon-whatsapp" style="color:#ffffff;" aria-hidden="true"></i></a></span>
-        <span><a href="mailto:?subject=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>&amp;body=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>" target="_self" title="" aria-label="Correo electrónico" data-placement="top" data-toggle="tooltip" data-title="Correo electrónico" data-original-title="Correo electrónico"><i class="fusion-social-network-icon fusion-tooltip fusion-mail awb-icon-mail" style="color:#ffffff;" aria-hidden="true"></i></a></span>
-        <?php if($extras[0]->OFVISIBLEENWEB == 1) { ?>
-          <br/><a href="<?php echo $extras[0]->OFLINKINSCRIPCION; ?>"><?php _e("inscribirme a esta oferta", 'wp-gruprompleo'); ?></a>
-        <?php } ?>
+        <div class="shareoffer">
+          <span><a href="https://www.facebook.com/sharer.php?u=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>&amp;quote=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>" target="_blank" rel="noreferrer" title="" aria-label="Facebook" data-placement="top" data-toggle="tooltip" data-title="Facebook" data-="" data-original-title="Facebook"><i class="fusion-social-network-icon fusion-tooltip fusion-facebook awb-icon-facebook" style="color:#ffffff;" aria-hidden="true"></i></a></span>
+          <span><a href="https://twitter.com/share?text=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>&amp;url=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>" target="_blank" rel="noopener noreferrer" title="" aria-label="X" data-placement="top" data-toggle="tooltip" data-title="X" data-="" data-original-title="X"><i class="fusion-social-network-icon fusion-tooltip fusion-twitter awb-icon-twitter" style="color:#ffffff;" aria-hidden="true"></i></a></span>
+          <span><a href="https://www.linkedin.com/shareArticle?url=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>&amp;title=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>&amp;summary=<?php echo urlencode(trim($extras[0]->OFDESCRIPCION)); ?>" target="_blank" rel="noopener noreferrer" title="" aria-label="LinkedIn" data-placement="top" data-toggle="tooltip" data-title="LinkedIn" data-="" data-original-title="LinkedIn"><i class="fusion-social-network-icon fusion-tooltip fusion-linkedin awb-icon-linkedin" style="color:#ffffff;" aria-hidden="true"></i></a></span>
+          <span><a href="https://api.whatsapp.com/send?text=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>" target="_blank" rel="noopener noreferrer" title="" aria-label="WhatsApp" data-placement="top" data-toggle="tooltip" data-title="WhatsApp" data-="" data-original-title="WhatsApp"><i class="fusion-social-network-icon fusion-tooltip fusion-whatsapp awb-icon-whatsapp" style="color:#ffffff;" aria-hidden="true"></i></a></span>
+          <span><a href="mailto:?subject=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>&amp;body=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>" target="_self" title="" aria-label="Correo electrónico" data-placement="top" data-toggle="tooltip" data-title="Correo electrónico" data-original-title="Correo electrónico"><i class="fusion-social-network-icon fusion-tooltip fusion-mail awb-icon-mail" style="color:#ffffff;" aria-hidden="true"></i></a></span>
+          <?php if($extras[0]->OFVISIBLEENWEB == 1) { ?>
+            <br/><a href="<?php echo $extras[0]->OFLINKINSCRIPCION; ?>"><?php _e("inscribirme a esta oferta", 'wp-gruprompleo'); ?></a>
+          <?php } ?>
+        </div>
       </div>
     </div>
     <div class="ofcontent">
@@ -177,8 +182,8 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
           <?php if($extras[0]->OFVISIBLEENWEB == 1) { ?>
           <a href="<?php echo $extras[0]->OFLINKINSCRIPCION; ?>"><?php _e("inscribirme a esta oferta", 'wp-gruprompleo'); ?></a>
           <?php } else { ?>
-            <p><b><?php _e("¡Gracias por tu interés! Esta oferta ya ha sido cubierta, pero muchas otras personas han encontrado su puesto ideal explorando nuestras vacantes. ¡Únete a ellos y encuentra el tuyo!", 'wp-gruprompleo'); ?></b></p>
-            <a href="<a href="<?php echo get_the_permalink(WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID); ?>"><?php _e("buscar más ofertas de trabajo", 'wp-gruprompleo'); ?></a>
+            <p><b><?php _e("Esta oferta ya ha sido cubierta, pero muchos/as han encontrado su puesto ideal explorando nuestras vacantes, ¡encuentra el tuyo!", 'wp-gruprompleo'); ?></b></p>
+            <a href="<?php echo get_the_permalink(WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID); ?>"><?php _e("buscar empleo", 'wp-gruprompleo'); ?></a>
           <?php } ?>
         </div>
       </div>
@@ -268,7 +273,7 @@ function wp_grupompleo_ofertas_portadas_shortcode($params = array(), $content = 
           <p><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($offer->Delegacion))?></p>
           <p class="place"><?=$offer->provincia?><br/><?=ucfirst(mb_strtolower($offer->Ubicacion))?></p>
           <p class="name"><?=mb_strtolower($offer->Puesto)?></p>
-          <a href="<?php echo wp_grupompleo_offer_permalink($offer); ?>">Ver oferta</a>
+          <a href="<?php echo wp_grupompleo_offer_permalink($offer); ?>"><?php _e('Ver oferta', 'wp-gruprompleo'); ?></a>
         </div>
     <?php } ?>
   </div>
@@ -300,7 +305,7 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
   ob_start(); ?>
   <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
   <div class="filters-button-group">
-    <div class="button-group"><h3>Buscador</h3><input type="text" class="quicksearch" placeholder="Buscar" /></div>
+    <div class="button-group"><h3>Buscador</h3><input type="text" class="quicksearch" placeholder="<?php _e('Buscar', 'wp-gruprompleo'); ?>" <?php echo(isset($_GET['quicksearch']) ? " value='".strip_tags($_GET['quicksearch'])."'" : ""); ?> /></div>
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_FILTERS_CACHE_FILE));
       foreach ($json as $title => $group) { ?>
       <div class="button-group">
@@ -425,18 +430,17 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
     <p><?php _e("Chequea cómo lo has escrito o utiliza sinónimos.", 'wp-gruprompleo'); ?></p>
     <p><strong><?php _e("¡Vuelve a intentarlo!", 'wp-gruprompleo'); ?></strong></p>
   </div>
-
-
   <style>
     <?php echo file_get_contents(plugin_dir_path(__FILE__).'css/style.css'); ?>
   </style>
   <script>
     <?php echo file_get_contents(plugin_dir_path(__FILE__).'js/isotope.js'); ?>
+    <?php echo(isset($_GET['quicksearch']) ? ' qsRegex = new RegExp( quicksearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""), \'gi\' );
+  iso.isotope();' : ""); ?>
   </script>
   <?php return ob_get_clean();
 }
 add_shortcode('ofertas-filtradas', 'wp_grupompleo_ofertas_con_filtro_shortcode');
-
 
 function wp_grupompleo_ofertas_mapa_shortcode($params = array(), $content = null) {
   ob_start(); ?>
@@ -448,3 +452,30 @@ function wp_grupompleo_ofertas_mapa_shortcode($params = array(), $content = null
   <?php return ob_get_clean();
 }
 add_shortcode('ofertas-mapa', 'wp_grupompleo_ofertas_mapa_shortcode');
+
+//Damos error 404 si la oferta no existe
+add_filter( 'template_include', 'wp_grupompleo_oferta_404', 99 );
+function wp_grupompleo_oferta_404( $template ) {
+  if (is_page(WP_GRUPOMPLEO_OFFER_PAGE_ID)  ) {
+    //Si no existe la oferta error 404
+    $codigo = explode("-", get_query_var('oferta_codigo'))[0];
+    $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE), true);
+    $offer_id = array_search($codigo, array_column($json, 'Codigo'));
+    if($offer_id == '') {
+      status_header( 404 );
+      nocache_headers();
+      include( get_query_template( '404' ) );
+      die();
+    }
+    //Si la oferta existe pero la URL es diferente 
+    $offer = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE))[$offer_id];
+    $currentlink = (is_ssl() ? 'https://' : 'http://'). $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    $link = wp_grupompleo_offer_permalink($offer);
+    if($link != $currentlink) {
+      wp_redirect($link, 301);
+      exit;
+    }
+
+  }
+  return $template;
+}
