@@ -166,7 +166,7 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
       </div>
     </div>
     <div class="ofcontent">
-      <div>
+      <div id="scrollable">
         <div class="oflogo"><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($extras[0]->OFDELEGACIONTEXTO))?></div>
         <ul>
           <?php 
@@ -187,7 +187,7 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
           <?php } ?>
         </div>
       </div>
-      <div>
+      <div id="notscrollable">
         <?php if(trim($extras[0]->OFDESCRIPCION) != '')  {
           echo "<h3>".__("descripción del puesto vacante", 'wp-gruprompleo')."</h3>"; 
           echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFDESCRIPCION))."</p>";
@@ -241,9 +241,26 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
     <style>
       <?php echo file_get_contents(plugin_dir_path(__FILE__).'css/style.css'); ?>
     </style>
-    <script type="text/javascript" src="<?php echo plugin_dir_url(__FILE__).'js/jquery.simple-scroll-follow.min.js'; ?>" id="jquery.simple-scroll-follow"></script>
     <script>
-      jQuery('.ofcontent > div:first-of-type').simpleScrollFollow();
+        jQuery(window).resize(function() {
+          // This will fire each time the window is resized:
+          if(jQuery(window).width() >= 1024) {
+            jQuery(document).on( "scroll", function() {
+              var currentpos = document.documentElement.scrollTop - jQuery('#notscrollable').position().top;
+              console.log(currentpos);
+              console.log(jQuery('#notscrollable').position().top + jQuery('#notscrollable').outerHeight());
+              if (currentpos > 0 && currentpos < (jQuery('#notscrollable').outerHeight() - jQuery('#scrollable').outerHeight() )) {
+                jQuery('#scrollable').css("margin-top", currentpos+"px");
+              } else if (currentpos <= 0 ) {
+                jQuery('#scrollable').css("margin-top", "0px");
+              } else if (currentpos >= (jQuery('#notscrollable').outerHeight() - jQuery('#scrollable').outerHeight() )) {
+                jQuery('#scrollable').css("margin-top", (jQuery('#notscrollable').outerHeight() - jQuery('#scrollable').outerHeight())+"px");
+              }
+            });
+          } else {
+            jQuery('#scrollable').css("margin-top", "0px");
+          }
+        }).resize(); // This will simulate a resize to trigger the initial run.
     </script>
     <?php wp_grupompleo_generate_schema ($extras[0]);
   }
