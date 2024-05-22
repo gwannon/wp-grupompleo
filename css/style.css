@@ -31,6 +31,10 @@
   padding: 10px; 
 }
 
+.jobs-item > p {
+  text-align: center;
+}
+
 .jobs-item > p:first-of-type {
   font-size:20px;
   text-align:center;
@@ -95,7 +99,7 @@
   color: #fff;
   font-size: 26px;
   display: none;
-  max-width: 880px;
+  /*max-width: 880px;*/
   margin: 20px auto;
 }
 

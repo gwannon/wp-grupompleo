@@ -88,7 +88,7 @@ function wp_grupompleo_ofertas_cache() {
 
 function wp_grupompleo_offer_permalink($offer) {
   if(is_array($offer)) $offer = json_decode(json_encode($offer), true);
-  return get_the_permalink(WP_GRUPOMPLEO_OFFER_PAGE_ID).$offer->Codigo."-".sanitize_title($offer->Puesto."-".$offer->provincia."-".$offer->Ubicacion)."/";
+  return get_the_permalink(WP_GRUPOMPLEO_OFFER_PAGE_ID).sanitize_title($offer->Puesto."-".$offer->provincia."-".$offer->Ubicacion)."-".$offer->Codigo."/";
 }
 
 function wp_grupompleo_generate_sitemap($json) {
@@ -112,7 +112,7 @@ function wp_grupompleo_rewrite_rules(){
 /* ----------- Filters ------------- */
 function wp_grupompleo_oferta_title( $title, $id = null ) {
   if ( is_page(WP_GRUPOMPLEO_OFFER_PAGE_ID) && in_the_loop()) {
-    $codigo = explode("-", get_query_var('oferta_codigo'))[0];
+    $codigo = end(explode("-", get_query_var('oferta_codigo')));
     $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
     foreach ($json as $offer) { 
       if($offer->Codigo == $codigo) {
@@ -127,7 +127,7 @@ add_filter( 'the_title', 'wp_grupompleo_oferta_title', 10, 2 );
 /* ----------- Códigos cortos ------ */
 function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
   ob_start();
-  $codigo = explode("-", get_query_var('oferta_codigo'))[0];
+  $codigo = end(explode("-", get_query_var('oferta_codigo')));
   if($codigo != '') {
     $extras = json_decode(file_get_contents(WP_GRUPOMPLEO_ENDPOINT_JOB."?cod=" . $codigo));
     //print_r($extras[0]);
@@ -190,44 +190,44 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
       <div>
         <?php if(trim($extras[0]->OFDESCRIPCION) != '')  {
           echo "<h3>".__("descripción del puesto vacante", 'wp-gruprompleo')."</h3>"; 
-          echo "<p>".trim($extras[0]->OFDESCRIPCION)."</p>";
+          echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFDESCRIPCION))."</p>";
         }
 
         if(trim($extras[0]->OFFUNCIONES) != '')  {
           echo "<h3>".__("funciones y responsabilidades", 'wp-gruprompleo')."</h3>"; 
-          echo "<p>".trim($extras[0]->OFFUNCIONES)."</p>";
+          echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFFUNCIONES))."</p>";
         }
         /* ----------------------------- */
         echo "<h3>".__("requisitos del puesto de trabajo", 'wp-gruprompleo')."</h3>"; 
 
         if(trim($extras[0]->OFFORMACIONBASE) != '')  {
           echo "<div class='boxeddata'><h4>".__("formación base", 'wp-gruprompleo')."</h4>"; 
-          echo "<p>".trim($extras[0]->OFFORMACIONBASE)."</p></div>";
+          echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFFORMACIONBASE))."</p></div>";
         }
 
         if(trim($extras[0]->OFEXPERIENCIA) != '')  {
           echo "<div class='boxeddata'><h4>".__("experiencia", 'wp-gruprompleo')."</h4>"; 
-          echo "<p>".trim($extras[0]->OFEXPERIENCIA)."</p></div>";
+          echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFEXPERIENCIA))."</p></div>";
         }
 
         if(trim($extras[0]->OFREQUISITOSDESEADOS) != '')  {
           echo "<div class='boxeddata'><h4>".__("requisitos deseados", 'wp-gruprompleo')."</h4>"; 
-          echo "<p>".trim($extras[0]->OFREQUISITOSDESEADOS)."</p></div>";
+          echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFREQUISITOSDESEADOS))."</p></div>";
         }
 
         if(trim($extras[0]->OFINFORMATICA) != '')  {
           echo "<div class='boxeddata'><h4>".__("informática", 'wp-gruprompleo')."</h4>"; 
-          echo "<p>".trim($extras[0]->OFINFORMATICA)."</p></div>";
+          echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFINFORMATICA))."</p></div>";
         }
 
         if(trim($extras[0]->OFIDIOMAS) != '')  {
           echo "<div class='boxeddata'><h4>".__("idiomas", 'wp-gruprompleo')."</h4>"; 
-          echo "<p>".trim($extras[0]->OFIDIOMAS)."</p></div>";
+          echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFIDIOMAS))."</p></div>";
         }
 
         if(trim($extras[0]->OFCOMPETENCIAS) != '')  {
           echo "<div class='boxeddata'><h4>".__("competencias", 'wp-gruprompleo')."</h4>"; 
-          echo "<p>".trim($extras[0]->OFCOMPETENCIAS)."</p></div>";
+          echo "<p>".str_replace("- ", "&#10003; ", trim($extras[0]->OFCOMPETENCIAS))."</p></div>";
         } ?>
           <?php if($extras[0]->OFVISIBLEENWEB == 1) { ?>
             <div class="ofbotonresp">
@@ -458,7 +458,7 @@ add_filter( 'template_include', 'wp_grupompleo_oferta_404', 99 );
 function wp_grupompleo_oferta_404( $template ) {
   if (is_page(WP_GRUPOMPLEO_OFFER_PAGE_ID)  ) {
     //Si no existe la oferta error 404
-    $codigo = explode("-", get_query_var('oferta_codigo'))[0];
+    $codigo = end(explode("-", get_query_var('oferta_codigo')));
     $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE), true);
     $offer_id = array_search($codigo, array_column($json, 'Codigo'));
     if($offer_id == '') {

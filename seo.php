@@ -20,7 +20,7 @@ add_filter('wpseo_opengraph_title', 'wp_grupompleo_filter_wpseo_title');
 
 function  wp_grupompleo_filter_wpseo_title($title) {
   if(is_page(WP_GRUPOMPLEO_OFFER_PAGE_ID) ) {
-    $codigo = explode("-", get_query_var('oferta_codigo'))[0];
+    $codigo = end(explode("-", get_query_var('oferta_codigo')));
     $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
     foreach ($json as $offer) { 
       if($offer->Codigo == $codigo) {
@@ -38,7 +38,7 @@ add_filter('wpseo_canonical', 'wp_grupompleo_filter_wpseo_canonical');
 add_filter('wpseo_opengraph_url', 'wp_grupompleo_filter_wpseo_canonical');
 function wp_grupompleo_filter_wpseo_canonical ($canonical) { 
   if(is_page(WP_GRUPOMPLEO_OFFER_PAGE_ID) ) {
-    $codigo = explode("-", get_query_var('oferta_codigo'))[0];
+    $codigo = end(explode("-", get_query_var('oferta_codigo')));
     $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
     foreach ($json as $offer) { 
       if($offer->Codigo == $codigo) {
