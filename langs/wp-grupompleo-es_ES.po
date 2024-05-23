@@ -1,0 +1,151 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: wp-grupompleo\n"
+"POT-Creation-Date: 2024-05-22 16:48+0200\n"
+"PO-Revision-Date: 2024-05-22 16:50+0200\n"
+"Last-Translator: \n"
+"Language-Team: jorge@enutt.net\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-KeywordsList: _;_e;__\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../admin.php:6
+msgid "Configuración ofertas de trabajo"
+msgstr ""
+
+#: ../admin.php:6
+msgid "Ofertas trabajo"
+msgstr ""
+
+#: ../admin.php:10
+msgid "Configuración de ofertas de trabajo"
+msgstr ""
+
+#: ../admin.php:12
+msgid "Datos guardados correctamente."
+msgstr ""
+
+#: ../admin.php:21
+msgid "Endpoint Ofertas de trabajo"
+msgstr ""
+
+#: ../admin.php:23
+msgid "Endpoint de la info extendida de la oferta de trabajo"
+msgstr ""
+
+#: ../admin.php:27
+msgid "ID de la página de \"Oferta\""
+msgstr ""
+
+#: ../admin.php:29
+msgid "ID de la página de \"Buscador de Oferta\""
+msgstr ""
+
+#: ../admin.php:31
+msgid "Guardar"
+msgstr ""
+
+#: ../wp-grupompleo.php:141
+#, php-format
+msgid "%s en %s"
+msgstr ""
+
+#: ../wp-grupompleo.php:145
+msgid "según valía"
+msgstr ""
+
+#: ../wp-grupompleo.php:147
+#, php-format
+msgid "%s €/hora"
+msgstr ""
+
+#: ../wp-grupompleo.php:149
+#, php-format
+msgid "%s €/mes"
+msgstr ""
+
+#: ../wp-grupompleo.php:151
+#, php-format
+msgid "%s €/anuales"
+msgstr ""
+
+#: ../wp-grupompleo.php:163 ../wp-grupompleo.php:183 ../wp-grupompleo.php:234
+msgid "inscribirme a esta oferta"
+msgstr ""
+
+#: ../wp-grupompleo.php:185
+msgid ""
+"Esta oferta ya ha sido cubierta, pero muchos/as han encontrado su puesto "
+"ideal explorando nuestras vacantes, ¡encuentra el tuyo!"
+msgstr ""
+
+#: ../wp-grupompleo.php:186
+msgid "buscar empleo"
+msgstr ""
+
+#: ../wp-grupompleo.php:192
+msgid "descripción del puesto vacante"
+msgstr ""
+
+#: ../wp-grupompleo.php:197
+msgid "funciones y responsabilidades"
+msgstr ""
+
+#: ../wp-grupompleo.php:201
+msgid "requisitos del puesto de trabajo"
+msgstr ""
+
+#: ../wp-grupompleo.php:204
+msgid "formación base"
+msgstr ""
+
+#: ../wp-grupompleo.php:209
+msgid "experiencia"
+msgstr ""
+
+#: ../wp-grupompleo.php:214
+msgid "requisitos deseados"
+msgstr ""
+
+#: ../wp-grupompleo.php:219
+msgid "informática"
+msgstr ""
+
+#: ../wp-grupompleo.php:224
+msgid "idiomas"
+msgstr ""
+
+#: ../wp-grupompleo.php:229
+msgid "competencias"
+msgstr ""
+
+#: ../wp-grupompleo.php:297
+msgid "Ver oferta"
+msgstr ""
+
+#: ../wp-grupompleo.php:329
+msgid "Buscar"
+msgstr ""
+
+#: ../wp-grupompleo.php:450
+msgid "Parece que no hemos encontrado lo que buscas<span></span>."
+msgstr ""
+
+#: ../wp-grupompleo.php:451
+msgid "Chequea cómo lo has escrito o utiliza sinónimos."
+msgstr ""
+
+#: ../wp-grupompleo.php:452
+msgid "¡Vuelve a intentarlo!"
+msgstr "¡Inténtalo de nuevo!"
+
+#: ../wp-grupompleo.php:470
+#, php-format
+msgid "%s en %s (%s)"
+msgstr ""

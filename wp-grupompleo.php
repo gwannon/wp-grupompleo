@@ -142,7 +142,7 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
         <?php
           if (!is_numeric($extras[0]->OFSALARIO)) $extras[0]->OFSALARIO = intval($extras[0]->OFSALARIO);
           if($extras[0]->OFSALARIO == 0) {
-            $salario = __('según valía', "");
+            $salario = __('según valía', "wp-grupompleo");
           } elseif($extras[0]->OFSALARIO > 0 && $extras[0]->OFSALARIO < 500) {
             $salario = sprintf(__('%s €/hora', "wp-gruprompleo"), number_format($extras[0]->OFSALARIO,2,',','.'));
           } elseif($extras[0]->OFSALARIO >= 500 && $extras[0]->OFSALARIO < 5000) {
@@ -326,11 +326,12 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
   ob_start(); ?>
   <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
   <div class="filters-button-group">
-    <div class="button-group"><h3>Buscador</h3><input type="text" class="quicksearch" placeholder="<?php _e('Buscar', 'wp-gruprompleo'); ?>" <?php echo(isset($_GET['quicksearch']) ? " value='".strip_tags($_GET['quicksearch'])."'" : ""); ?> /></div>
+    <div class="button-group"><h2><?php _e("<span>Empleos en el</span> Buscador", 'wp-gruprompleo');/*_e("Buscador <span>de trabajo</span>", 'wp-gruprompleo');*/ ?></h3>
+    <input type="text" class="quicksearch" placeholder="<?php _e('Buscar', 'wp-gruprompleo'); ?>" <?php echo(isset($_GET['quicksearch']) ? " value='".strip_tags($_GET['quicksearch'])."'" : ""); ?> /></div>
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_FILTERS_CACHE_FILE));
       foreach ($json as $title => $group) { ?>
       <div class="button-group">
-        <h3><?=($title == 'Ubicacion' ? "Localidad" : $title)?></h3>
+        <h2><span><?php _e('Empleos por', 'wp-gruprompleo'); ?></span><?=($title == 'Ubicacion' ? "Localidad" : $title)?></h2>
         <?php if($title != 'Ubicacion') { ?>
           <select name="<?=sanitize_title($title)?>">
             <option value="">Todas</option>
@@ -340,7 +341,7 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
           </select>
         <?php } else { ?>
           <select name="<?=sanitize_title($title)?>" id="select-<?=sanitize_title($title)?>">
-            <option value="">Todas</option>
+            <option value=""><?php _e("Todos", 'wp-gruprompleo'); ?></option>
             <?php foreach ($group as $label => $cities) { ?>
               <option value="provincia-<?=sanitize_title($label); ?>"<?=(isset($_GET['provincia']) && $_GET['provincia'] == $label ? " selected='selected'" : "")?>><?=$label?></option>
             <?php } ?>          
@@ -446,10 +447,10 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
     <?php } ?>
   </div>
   <div id="noresults">
-    <img src="/wp-content/uploads/2024/04/error-busqueda.png" alt="">
     <p><?php _e("Parece que no hemos encontrado lo que buscas<span></span>.", 'wp-gruprompleo'); ?></p>
     <p><?php _e("Chequea cómo lo has escrito o utiliza sinónimos.", 'wp-gruprompleo'); ?></p>
     <p><strong><?php _e("¡Vuelve a intentarlo!", 'wp-gruprompleo'); ?></strong></p>
+    <img src="/wp-content/uploads/2024/04/error-busqueda.png" alt="">
   </div>
   <style>
     <?php echo file_get_contents(plugin_dir_path(__FILE__).'css/style.css'); ?>
@@ -473,6 +474,28 @@ function wp_grupompleo_ofertas_mapa_shortcode($params = array(), $content = null
   <?php return ob_get_clean();
 }
 add_shortcode('ofertas-mapa', 'wp_grupompleo_ofertas_mapa_shortcode');
+
+
+function wp_grupompleo_ofertas_contador_shortcode($params = array(), $content = null) {
+
+  $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
+  echo count($json);
+}
+add_shortcode('ofertas-contador', 'wp_grupompleo_ofertas_contador_shortcode');
+
+function wp_grupompleo_ofertas_contador_shortocode($output, $tag, $attr, $m) { 
+  //fusion_counter_box
+  if ($tag == 'fusion_counter_box') {
+    if($attr['value'] == 145) {
+      return do_shortcode('[fusion_counter_box value="'.count(json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE))).'" unit_pos="suffix" direction="up" /]'); 
+    }
+  }
+  return $output; 
+}
+add_filter( "pre_do_shortcode_tag", "wp_grupompleo_ofertas_contador_shortocode", 10, 4 );
+  
+
+
 
 //Damos error 404 si la oferta no existe
 add_filter( 'template_include', 'wp_grupompleo_oferta_404', 99 );
@@ -500,3 +523,6 @@ function wp_grupompleo_oferta_404( $template ) {
   }
   return $template;
 }
+
+
+
