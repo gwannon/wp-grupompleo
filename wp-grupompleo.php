@@ -62,7 +62,7 @@ function wp_grupompleo_ofertas_cache() {
         else if (!in_array($job[$label], $filters[$label])) $filters[$label][] = $job[$label];
       }
     }
-    
+
     foreach($filters as $label => $filter) {
       if($label == 'Ubicacion') {
         //print_r ($filter);
@@ -270,7 +270,7 @@ add_shortcode('oferta', 'wp_grupompleo_oferta_shortcode');
 
 function wp_grupompleo_ofertas_portadas_shortcode($params = array(), $content = null) {
   ob_start(); ?>
-  <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+  <?php /* <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script> */ ?>
   <div class="jobs-grid">
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
       $sedes = [];
@@ -300,27 +300,96 @@ function wp_grupompleo_ofertas_portadas_shortcode($params = array(), $content = 
   </div>
   <style>
     <?php echo file_get_contents(plugin_dir_path(__FILE__).'css/style.css'); ?>
+      @media (min-width: 1024px) {
+        .jobs-grid {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+  </style>
+  <?php return ob_get_clean();
+}
+add_shortcode('ofertas-portada', 'wp_grupompleo_ofertas_portadas_shortcode');
+
+function wp_grupompleo_ofertas_portadas_slider_shortcode($params = array(), $content = null) {
+  ob_start(); ?>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <div class="swiper mySwiper swiper-h">
+    <div class="jobs-grid swiper-wrapper">
+      <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));
+        $sedes = [];
+        $newjson = [];
+        foreach ($json as $key => $offer) { 
+          if(!in_array($offer->Sede, $sedes)) { 
+            $sedes[] = $offer->Sede;
+            $newjson[] = $offer;
+            $json[$key]->Sede = "";
+          }
+        }
+        shuffle($newjson);
+        foreach ($json as $key => $offer) { 
+          if($offer->Sede == 'Irunampleo') { 
+            $newjson[] = $offer;
+            break;
+          }
+        }
+        foreach ($newjson as $offer) { ?>
+          <div class="swiper-slide jobs-item">
+            <p><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($offer->Delegacion))?></p>
+            <p class="place"><?=$offer->provincia?><br/><?=ucfirst(mb_strtolower($offer->Ubicacion))?></p>
+            <p class="name"><?=mb_strtolower($offer->Puesto)?></p>
+            <a href="<?php echo wp_grupompleo_offer_permalink($offer); ?>"><?php _e('Ver oferta', 'wp-gruprompleo'); ?></a>
+          </div>
+      <?php } ?>
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+  <style>
+    <?php echo file_get_contents(plugin_dir_path(__FILE__).'css/style.css'); ?>
+    .swiper {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .swiper-slide.jobs-item {
+      margin: 0px;
+     }
+
+    .swiper.mySwiper .swiper-button-next,
+    .swiper.mySwiper .swiper-button-prev {
+      color: #fcc501;
+    }
   </style>
   <script>
-    var iso = jQuery('.jobs-grid').isotope({
-      // options
-      itemSelector: '.jobs-item',
-      layoutMode: 'fitRows',
-    });
-    jQuery( document ).ready(function() {
-      var minheight = 0;
-      jQuery('.jobs-item').not('.jobs-item:hidden').each(function() {
-        if(jQuery(this).outerHeight() > minheight) {
-          minheight = jQuery(this).outerHeight();
+    var swiper = new Swiper(".mySwiper", {
+      slidesPerView: 1,
+      spaceBetween: 10,
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 10,
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 10,
         }
-      });
-      jQuery('.jobs-item').css("min-height", minheight + "px");
-      iso.isotope();
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        type: "fraction",
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
     });
   </script>
   <?php return ob_get_clean();
 }
-add_shortcode('ofertas-portada', 'wp_grupompleo_ofertas_portadas_shortcode');
+add_shortcode('ofertas-portada-slider', 'wp_grupompleo_ofertas_portadas_slider_shortcode');
 
 function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content = null) {
   ob_start(); ?>
@@ -331,13 +400,13 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_FILTERS_CACHE_FILE));
       foreach ($json as $title => $group) { ?>
       <div class="button-group">
-        <h2><span><?php _e('Empleos por', 'wp-gruprompleo'); ?></span><?=($title == 'Ubicacion' ? "Localidad" : $title)?></h2>
+        <h2><span><?php _e('Empleos por', 'wp-gruprompleo'); ?></span><?=($title == 'Ubicacion' ? "Provincia" : ($title == 'Tipo' ? "Contratación" : $title))?></h2>
         <?php if($title != 'Ubicacion') { ?>
           <select name="<?=sanitize_title($title)?>">
             <option value="">Todas</option>
             <?php foreach ($group as $button) { $sanitize_title = sanitize_title($title); ?>
-              <option value="<?=$sanitize_title; ?>-<?=sanitize_title($button); ?>"<?=(isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] == sanitize_title($button) ? " selected='selected'" : "")?>><?=$button?></option>
-           <?php } ?>
+              <option value="<?=$sanitize_title; ?>-<?=sanitize_title($button); ?>"<?=(isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] == sanitize_title($button) ? " selected='selected'" : "")?>><?=($button == 'Directa' ? "Directa a través de empresa" : ($button == 'ETT' ? "A través de ETT" : $button))?></option>
+            <?php } ?>
           </select>
         <?php } else { ?>
           <select name="<?=sanitize_title($title)?>" id="select-<?=sanitize_title($title)?>">
@@ -360,6 +429,8 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
               jQuery("#city-group-<?=sanitize_title($title)?> input[type='checkbox']").prop( "checked", false );
               var currentState = this.value;
               //console.log("Seleccionamos: "+currentState);
+              var e = document.getElementById("city-group-<?=sanitize_title($title)?>");
+              e.scrollTop = 0;
               jQuery("label.city").each(function() {
                 
                 if(jQuery(this).data("provincia") == currentState) {
@@ -435,14 +506,16 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
         <?php } ?>
       </div>
     <?php } ?>
+    <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE)); ?>
+    <span id="numberresults"><?php printf(__("Hemos encontrado <b>%d</b> ofertas de empleo.", 'wp-gruprompleo'), count($json)); ?></span>
   </div>
   <div class="jobs-grid">
-    <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE));foreach ($json as $offer) { ?>
+    <?php foreach ($json as $offer) { ?>
       <div class="jobs-item sede-<?=sanitize_title($offer->Sede)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($offer->Puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Sede));?>">
         <p><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($offer->Delegacion))?></p>
         <p class="place"><?=$offer->provincia?><br/><?=ucfirst(mb_strtolower($offer->Ubicacion))?></p>
         <p class="name"><?=mb_strtolower($offer->Puesto)?></p>
-        <a href="<?php echo wp_grupompleo_offer_permalink($offer); ?>">Ver oferta</a>
+        <a href="<?php echo wp_grupompleo_offer_permalink($offer); ?>"><?php _e("Ver oferta", 'wp-gruprompleo'); ?></a>
       </div>
     <?php } ?>
   </div>

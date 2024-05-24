@@ -126,7 +126,12 @@ function layoutComplete() {
   });
   jQuery('.jobs-item').css("min-height", minheight + "px");
 
-  if(jQuery('.jobs-grid').data('isotope').filteredItems.length == 0) {
+
+  var totalfiltereds = jQuery('.jobs-grid').data('isotope').filteredItems.length;
+
+  jQuery("#numberresults > b").text(totalfiltereds);
+
+  if(totalfiltereds == 0) {
     jQuery("#noresults").addClass("show");
     if(jQuery(".quicksearch").val() != '') jQuery("#noresults p:first-of-type span").text(' "'+jQuery(".quicksearch").val()+'"')
   } else {

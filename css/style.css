@@ -5,7 +5,7 @@
   background-color: white;
   border-radius: 10px;
   margin: 20px;
-  padding-bottom: 56px;
+  padding-bottom: 76px;
   position: relative;
 }
 
@@ -40,6 +40,8 @@
   text-align:center;
   font-weight: 700;
   border-bottom: 1px solid #ededed;
+  margin-top: 30px;
+  padding: 25px;
 }
 
 .jobs-item > p:first-of-type > span {
@@ -71,6 +73,7 @@
   border-bottom-right-radius: 10px;
   border: 2px solid #fcc501;
   transition: all 0.3s;
+  padding: 20px 10px;
 }
 
 .jobs-item > a:hover {
@@ -117,7 +120,7 @@
   border-radius: 15px;
   padding: 20px;
   text-align: center;
-  color: #fff;
+  color: #716f68;
   font-size: 26px;
   display: none;
   /*max-width: 880px;*/
@@ -132,11 +135,22 @@
 }
 
 
+#numberresults {
+  font-style: italic;
+  color: #716f68;
+  border-top: 2px solid #fcc501;
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  order: 6;
+}
+
 .filters-button-group {
   display: flex;
   flex-wrap: wrap;
   margin-top: 25px;
   gap: 5px;
+  border-top: 2px solid #fcc501;
 }
 
 .filters-button-group > * {
@@ -144,7 +158,7 @@
 }
 
 .post-content .filters-button-group > .button-group > h2 {
-  font-size: 25px;
+  font-size: 18px !important;
   line-height: 120%;
   font-weight: 700;
   text-align: center;
