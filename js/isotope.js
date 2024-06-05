@@ -62,6 +62,7 @@ quicksearch.addEventListener( 'keyup', debounce( function() {
 
 // debounce so filtering doesn't happen every millisecond
 function debounce( fn, threshold ) {
+  cookieUpdate();
   var timeout;
   threshold = threshold || 100;
   return function debounced() {
@@ -77,6 +78,9 @@ function debounce( fn, threshold ) {
 
 document.querySelectorAll("input[type='radio'],input[type='checkbox'],select").forEach((element) => {
   element.addEventListener('change',function(){
+
+    cookieUpdate();
+
     jQuery("#noresults").removeClass("show");
     selectedRadios = [];
     document.querySelectorAll("input[type='radio']:checked,select").forEach((element) => {
@@ -141,3 +145,13 @@ function layoutComplete() {
 
 }
 iso.on( 'layoutComplete', layoutComplete );
+
+function cookieUpdate() {
+  console.log("busqueda");
+  var filters = {
+    'ubicacion': jQuery('#select-ubicacion').val(),
+    'tipo': jQuery('select[name=tipo]').val(),
+    'search': jQuery('input.quicksearch').val(),
+  };
+  Cookies.set('buscaroferta', JSON.stringify(filters));
+}

@@ -56,6 +56,7 @@
   font-size:20px;
   line-height: 120%;
   min-height: 92px;
+  font-size: 20px;
 }
 
 .jobs-item > a {
@@ -121,14 +122,15 @@
   padding: 20px;
   text-align: center;
   color: #716f68;
-  font-size: 26px;
+  font-size: 38px;
+  line-height: 110%;
   display: none;
   /*max-width: 880px;*/
   margin: 20px auto;
 }
 
 #noresults > p:nth-of-type(2) { font-size: 18px; }
-#noresults > p:nth-of-type(3) { font-size: 42px; }
+#noresults > p:nth-of-type(3) { font-size: 26px; }
 
 #noresults.show {
   display: block;
@@ -157,6 +159,10 @@
   width: calc(50% - 5px);
 }
 
+.filters-button-group > *:first-of-type {
+  width: calc(100% - 5px);
+}
+
 .post-content .filters-button-group > .button-group > h2 {
   font-size: 18px !important;
   line-height: 120%;
@@ -173,8 +179,9 @@
 }
 
 @media (min-width: 800px) {
+  .filters-button-group > *:first-of-type,
   .filters-button-group > * {
-    width: calc(25% - 5px);
+    width: calc(33% - 5px);
   }
 
   .post-content .filters-button-group > .button-group > h2 { 
