@@ -392,25 +392,27 @@ function wp_grupompleo_ofertas_portadas_slider_shortcode($params = array(), $con
 add_shortcode('ofertas-portada-slider', 'wp_grupompleo_ofertas_portadas_slider_shortcode');
 
 function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content = null) {
-  ob_start(); $buscaroferta = json_decode(stripslashes($_COOKIE['buscaroferta']), true); ?>
+  ob_start(); $buscaroferta = json_decode(stripslashes($_COOKIE['buscaroferta']), true); /*echo "<pre>"; print_r($buscaroferta); echo "</pre>";*/ ?>
   <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   <div class="filters-button-group">
     <div class="button-group"><h2><?php _e("<span>Empleos en el</span> Buscador", 'wp-gruprompleo');/*_e("Buscador <span>de trabajo</span>", 'wp-gruprompleo');*/ ?></h3>
-    <input type="text" class="quicksearch" placeholder="<?php _e('Buscar', 'wp-gruprompleo'); ?>" <?php echo(isset($_GET['quicksearch']) || isset($buscaroferta['search']) ? " value='".(isset($_GET['quicksearch']) ? strip_tags($_GET['quicksearch']) : (isset($buscaroferta['search']) && $buscaroferta['search'] != '' ? $buscaroferta['search'] : ""))."'" : ""); ?> /></div>
+    <input type="text" placeholder="<?php _e('Buscar', 'wp-gruprompleo'); ?>"
+      <?php echo(isset($_GET['search']) || isset($buscaroferta['search']) ? " value='".(isset($_GET['search']) ? strip_tags($_GET['search']) : (isset($buscaroferta['search']) && $buscaroferta['search'] != '' ? $buscaroferta['search'] : ""))."'" : ""); ?> 
+        <?=((isset($_GET['search']) && $_GET['search'] != '') || (isset($buscaroferta['search']) && $buscaroferta['search'] != '') ? " class='quicksearch selected'": " class='quicksearch'")?>/></div>
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_FILTERS_CACHE_FILE));
       foreach ($json as $title => $group) { ?>
       <div class="button-group">
         <h2><span><?php _e('Empleos por', 'wp-gruprompleo'); ?></span><?=($title == 'Ubicacion' ? "Provincia" : ($title == 'Tipo' ? "Contratación" : $title))?></h2>
         <?php if($title != 'Ubicacion') { ?>
-          <select name="<?=sanitize_title($title)?>">
+          <select name="<?php $sanitize_title = sanitize_title($title); echo $sanitize_title; ?>"<?=((isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] != '') || (isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] != '') ? " class='selected'": "")?>>
             <option value="">Todas</option>
-            <?php foreach ($group as $button) { $sanitize_title = sanitize_title($title); ?>
+            <?php foreach ($group as $button) {  ?>
               <option value="<?=$sanitize_title; ?>-<?=sanitize_title($button); ?>"<?=(isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] == sanitize_title($button) ? " selected='selected'" : ( isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] == $sanitize_title."-".sanitize_title($button) ? " selected='selected'" : ""))?>><?=($button == 'Directa' ? "Directa a través de empresa" : ($button == 'ETT' ? "A través de ETT" : $button))?></option>
             <?php } ?>
           </select>
         <?php } else { $sanitize_title = sanitize_title($title); ?>
-          <select name="<?=$sanitize_title?>" id="select-<?=$sanitize_title?>">
+          <select name="<?=$sanitize_title?>" id="select-<?=$sanitize_title?>"<?=((isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] != '') || (isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] != '') ? " class='selected'": "")?>>
             <option value=""><?php _e("Todos", 'wp-gruprompleo'); ?></option>
             <?php foreach ($group as $label => $cities) { ?>
               <option value="provincia-<?=sanitize_title($label); ?>"<?=(isset($_GET['provincia']) && $_GET['provincia'] == $label ? " selected='selected'" : (isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] == "provincia-".sanitize_title($label) ? " selected='selected'" : ""))?>><?=$label?></option>
@@ -531,7 +533,7 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
   </style>
   <script>
     <?php echo file_get_contents(plugin_dir_path(__FILE__).'js/isotope.js'); ?>
-    <?php echo(isset($_GET['quicksearch']) ? ' qsRegex = new RegExp( quicksearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""), \'gi\' );
+    <?php echo(isset($_GET['search']) || isset($buscaroferta['search']) ? ' qsRegex = new RegExp( quicksearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""), \'gi\' );
   iso.isotope();' : ""); ?>
   </script>
   <?php return ob_get_clean();
@@ -599,4 +601,10 @@ function wp_grupompleo_oferta_404( $template ) {
 }
 
 
+//Enlace con hash en las urls a la página de búsqueda de empleo
+function wp_grupompleo_change_permalinks($permalink, $post) { 
+  if($post == WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID) return add_query_arg(['hash' => hash('md5', date("mdHis").rand(1,100000))], $permalink);
+  else return $permalink; 
+}; 
+add_filter( 'page_link', 'wp_grupompleo_change_permalinks', 10, 3);
 

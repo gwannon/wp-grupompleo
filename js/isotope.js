@@ -62,7 +62,7 @@ quicksearch.addEventListener( 'keyup', debounce( function() {
 
 // debounce so filtering doesn't happen every millisecond
 function debounce( fn, threshold ) {
-  cookieUpdate();
+  
   var timeout;
   threshold = threshold || 100;
   return function debounced() {
@@ -72,6 +72,7 @@ function debounce( fn, threshold ) {
     function delayed() {
       fn.apply( _this, args );
     }
+    cookieUpdate();
     timeout = setTimeout( delayed, threshold );
   };
 }
