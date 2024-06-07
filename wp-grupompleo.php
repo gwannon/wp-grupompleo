@@ -39,6 +39,7 @@ add_action('plugins_loaded', 'wp_grupompleo_plugins_loaded', 0 );
 /* ----------- Includes ------------ */
 include_once(plugin_dir_path(__FILE__).'admin.php');
 include_once(plugin_dir_path(__FILE__).'seo.php');
+include_once(plugin_dir_path(__FILE__).'mapa.php');
 
 /* ----------- Cron job ------------ */
 //wp-admin/admin-ajax.php?action=grupompleo_ofertas
@@ -247,8 +248,8 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
           if(jQuery(window).width() >= 1024) {
             jQuery(document).on( "scroll", function() {
               var currentpos = document.documentElement.scrollTop - jQuery('#notscrollable').position().top;
-              console.log(currentpos);
-              console.log(jQuery('#notscrollable').position().top + jQuery('#notscrollable').outerHeight());
+              //console.log(currentpos);
+              //console.log(jQuery('#notscrollable').position().top + jQuery('#notscrollable').outerHeight());
               if (currentpos > 0 && currentpos < (jQuery('#notscrollable').outerHeight() - jQuery('#scrollable').outerHeight() )) {
                 jQuery('#scrollable').css("margin-top", currentpos+"px");
               } else if (currentpos <= 0 ) {
@@ -394,11 +395,11 @@ add_shortcode('ofertas-portada-slider', 'wp_grupompleo_ofertas_portadas_slider_s
 function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content = null) {
   ob_start(); $buscaroferta = json_decode(stripslashes($_COOKIE['buscaroferta']), true); /*echo "<pre>"; print_r($buscaroferta); echo "</pre>";*/ ?>
   <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+  <?php /* <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script> */ ?>
   <div class="filters-button-group">
     <div class="button-group"><h2><?php _e("<span>Empleos en el</span> Buscador", 'wp-gruprompleo');/*_e("Buscador <span>de trabajo</span>", 'wp-gruprompleo');*/ ?></h3>
     <input type="text" placeholder="<?php _e('Buscar', 'wp-gruprompleo'); ?>"
-      <?php echo(isset($_GET['search']) || isset($buscaroferta['search']) ? " value='".(isset($_GET['search']) ? strip_tags($_GET['search']) : (isset($buscaroferta['search']) && $buscaroferta['search'] != '' ? $buscaroferta['search'] : ""))."'" : ""); ?> 
+      <?php echo(isset($_GET['search']) || isset($buscaroferta['search']) ? " ".(isset($_GET['search']) ? "value='".strip_tags($_GET['search']).'"' : (isset($buscaroferta['search']) && $buscaroferta['search'] != '' ? "value='".$buscaroferta['search']."'" : ""))."'" : ""); ?> 
         <?=((isset($_GET['search']) && $_GET['search'] != '') || (isset($buscaroferta['search']) && $buscaroferta['search'] != '') ? " class='quicksearch selected'": " class='quicksearch'")?>/></div>
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_FILTERS_CACHE_FILE));
       foreach ($json as $title => $group) { ?>

@@ -55,7 +55,6 @@ var iso = jQuery('.jobs-grid').isotope({
 // use value of search field to filter
 var quicksearch = document.querySelector('.quicksearch');
 quicksearch.addEventListener( 'keyup', debounce( function() {
-  //console.log(quicksearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""));
   qsRegex = new RegExp( quicksearch.value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""), 'gi' );
   iso.isotope();
 }, 200 ) );
@@ -77,18 +76,18 @@ function debounce( fn, threshold ) {
   };
 }
 
-document.querySelectorAll("input[type='radio'],input[type='checkbox'],select").forEach((element) => {
+document.querySelectorAll(".filters-button-group input[type='radio'], .filters-button-group input[type='checkbox'],select").forEach((element) => {
   element.addEventListener('change',function(){
 
     cookieUpdate();
 
     jQuery("#noresults").removeClass("show");
     selectedRadios = [];
-    document.querySelectorAll("input[type='radio']:checked,select").forEach((element) => {
+    document.querySelectorAll(".filters-button-group input[type='radio']:checked,select").forEach((element) => {
       if(element.value!= '') selectedRadios.push(element.value);
     });
     selectedCheckboxes = [];
-    document.querySelectorAll("input[type='checkbox']:checked").forEach((element) => {
+    document.querySelectorAll(".filters-button-group input[type='checkbox']:checked").forEach((element) => {
       if(element.value!= '') selectedCheckboxes.push(element.value);
     });
     iso.isotope();
@@ -106,11 +105,11 @@ jQuery(".button-group *:is(input[type=checkbox])").on("change", function() {
 
 jQuery( document ).ready(function() {
   selectedRadios = [];
-  document.querySelectorAll("input[type='radio']:checked,select").forEach((element) => {
+  document.querySelectorAll(".filters-button-group input[type='radio']:checked,select").forEach((element) => {
     if(element.value!= '') selectedRadios.push(element.value);
   });
   selectedCheckboxes = [];
-  document.querySelectorAll("input[type='checkbox']:checked").forEach((element) => {
+  document.querySelectorAll(".filters-button-group input[type='checkbox']:checked").forEach((element) => {
     if(element.value!= '') selectedCheckboxes.push(element.value);
   });
   iso.isotope();
@@ -148,11 +147,10 @@ function layoutComplete() {
 iso.on( 'layoutComplete', layoutComplete );
 
 function cookieUpdate() {
-  console.log("busqueda");
   var filters = {
     'ubicacion': jQuery('#select-ubicacion').val(),
     'tipo': jQuery('select[name=tipo]').val(),
     'search': jQuery('input.quicksearch').val(),
   };
-  Cookies.set('buscaroferta', JSON.stringify(filters));
+  jQuery.cookie('buscaroferta', JSON.stringify(filters));
 }
