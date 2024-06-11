@@ -147,8 +147,15 @@ function layoutComplete() {
 iso.on( 'layoutComplete', layoutComplete );
 
 function cookieUpdate() {
+  var checks = [];
+  jQuery("#city-group-ubicacion input[type='checkbox']:checked").each(function() {
+    checks.push(jQuery(this).val());
+    
+  });
+  console.log(checks);
   var filters = {
     'ubicacion': jQuery('#select-ubicacion').val(),
+    'localizacion': checks,
     'tipo': jQuery('select[name=tipo]').val(),
     'search': jQuery('input.quicksearch').val(),
   };

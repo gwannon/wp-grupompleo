@@ -421,10 +421,17 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
           </select>
         </div>
         <div class="button-group" style=" width: 100%; order: 5;">
-          <div id="city-group-<?=sanitize_title($title)?>">
+          <div id="city-group-<?=$sanitize_title?>">
             <?php foreach ($group as $label => $cities) { ?>
               <?php foreach ($cities as $city) { ?>
-                <label class="city hidden" data-provincia="provincia-<?=sanitize_title($label);?>"><input type="checkbox" name="<?=sanitize_title($title)?>-localidad" value="ubicacion-<?=sanitize_title($city); ?>"<?=(isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] == sanitize_title($button) ? " checked='checked'" : "")?>/> <?=$city?></label>
+                <label class="city <?=(isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] == "provincia-".sanitize_title($label) ? 'show' : 'hidden')?>" 
+                  data-provincia="provincia-<?=sanitize_title($label);?>">
+                  <input type="checkbox" 
+                    name="<?=$sanitize_title?>-localidad" 
+                    value="ubicacion-<?=sanitize_title($city); ?>"
+                    <?=(isset($buscaroferta['localizacion']) && count($buscaroferta['localizacion']) > 0 && in_array("ubicacion-".sanitize_title($city), $buscaroferta['localizacion']) ? " checked='checked'" : "")?>/> 
+                  <?=$city?>
+                </label>
               <?php } ?>
             <?php } ?>
           </div>
@@ -436,7 +443,6 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
               var e = document.getElementById("city-group-<?=sanitize_title($title)?>");
               e.scrollTop = 0;
               jQuery("label.city").each(function() {
-                
                 if(jQuery(this).data("provincia") == currentState) {
                   jQuery(this).removeClass("hidden");
                   jQuery(this).addClass("showed");
