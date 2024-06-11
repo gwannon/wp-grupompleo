@@ -16,6 +16,27 @@ function wp_grupompleo_map($params = array(), $content = null) {
 	foreach ($csv as $line) {
 		$data[] = str_getcsv($line);
 	} ?>
+
+
+	<div id="grupompleo_map_wrap_responsive">
+		<select id="grupompleo_map_wrap_responsive_select">
+			<option><?php _e("Elige tu oficina", "grupompleo"); ?></option>
+			<?php foreach ($data as $key => $item) { ?>
+				<option value="<?=$key?>"><?=$item[0]?></option>
+			<?php } ?>
+		</select>
+	</div>
+	<script>
+		jQuery("#grupompleo_map_wrap_responsive select").on('change', function() {
+			var key = jQuery("#grupompleo_map_wrap_responsive select").val();
+			map.setZoom(16);
+			map.setCenter({ lat: markers[key].getPosition().lat(), lng: markers[key].getPosition().lng() });
+			jQuery("#grupompleo_map_wrap #grupompleo_list ul li").not("#grupompleo_map_wrap #grupompleo_list ul li[data-key="+key+"]").removeClass("show");
+
+			jQuery("#grupompleo_map_wrap #grupompleo_list ul li[data-key="+key+"]").addClass("show");
+
+		});
+	</script>
 	<div id="grupompleo_map_wrap">
 		<div id="grupompleo_list">
 			<ul>
@@ -24,7 +45,7 @@ function wp_grupompleo_map($params = array(), $content = null) {
 						<b><?=$item[0]?></b><br/>
 						<?=$item[1]?><br/>
 						<a href="tel:<?=$item[2]?>"><?=$item[2]?></a> - <a href="mailto:<?=$item[5]?>"><?=$item[5]?></a><br/>
-						<a href="https://www.google.com/maps/dir/?api=1&destination=<?=$item[3]?>,<?=$item[4]?>" target="_blank">Cómo llegar</a>
+						<a href="https://www.google.com/maps/dir/?api=1&destination=<?=$item[3]?>,<?=$item[4]?>" target="_blank"><?php _e("Cómo llegar", "grupompleo"); ?></a>
 					</li>
 				<?php } ?>
 			</ul>
@@ -40,26 +61,63 @@ function wp_grupompleo_map($params = array(), $content = null) {
 			flex-wrap: wrap;
 		}
 
+		#grupompleo_map_wrap #grupompleo_map {
+			min-height: 300px;
+		}
+
+		#grupompleo_map_wrap #grupompleo_map,
 		#grupompleo_map_wrap #grupompleo_list {
-			width: calc(30% - 20px);
-		} 
+			width: calc(100% - 20px);
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul {
+			padding: 0;
+			margin: 0;
+		}
 
 		#grupompleo_map_wrap #grupompleo_list ul li {
 			cursor: pointer;
 			transition: all 0.3s;
 			font-size: 12px;
+			display: none;
+			list-style-type : none;
+			padding: 10px;
+			margin: 0;
 		}
 
-		#grupompleo_map_wrap #grupompleo_list ul li.selected,
-		#grupompleo_map_wrap #grupompleo_list ul li:hover {
+		#grupompleo_map_wrap #grupompleo_list ul li.show {
+			display: block;
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul li:hover,
+		#grupompleo_map_wrap #grupompleo_list ul li.show {
 			background-color: #000;
 			color: #fff;
 		}
 
-		#grupompleo_map_wrap #grupompleo_map {
-			width: calc(70% - 20px);
-		} 
+		#grupompleo_map_wrap_responsive select {
+			width: calc(100% - 20px);
+			box-sizing: border-box;
+			margin-bottom: 20px;
+		}
 
+		@media (min-width: 680px) {
+			#grupompleo_map_wrap #grupompleo_list ul li {
+				display: block;
+			}
+
+			#grupompleo_map_wrap #grupompleo_map {
+				width: calc(70% - 20px);
+			} 
+
+			#grupompleo_map_wrap #grupompleo_list {
+				width: calc(30% - 20px);
+			} 
+
+			#grupompleo_map_wrap_responsive select {
+				display: none;
+			}
+		}
 	</style>
 	<script type="text/javascript" src="https://grupompleo.enuttisworking.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?=$params['apikey']?>"></script>
@@ -112,8 +170,9 @@ function wp_grupompleo_map($params = array(), $content = null) {
 				infowindow.open(map, marker);*/
 				map.setZoom(16);
 				map.setCenter(marker.position);
-				jQuery("#grupompleo_map_wrap #grupompleo_list ul li").removeClass("selected");
-				jQuery("#grupompleo_map_wrap #grupompleo_list ul li[data-key="+key+"]").addClass("selected");
+				jQuery("#grupompleo_map_wrap #grupompleo_list ul li").removeClass("show");
+				jQuery("#grupompleo_map_wrap #grupompleo_list ul li[data-key="+key+"]").addClass("show");
+				jQuery("#grupompleo_map_wrap_responsive select").val(key);
 			});
 		}
 
@@ -140,8 +199,9 @@ function wp_grupompleo_map($params = array(), $content = null) {
 		});
 
 		jQuery("#grupompleo_map_wrap #grupompleo_list ul li").click(function() {
-			jQuery("#grupompleo_map_wrap #grupompleo_list ul li").removeClass("selected");
-			jQuery(this).addClass("selected");
+			jQuery("#grupompleo_map_wrap #grupompleo_list ul li").removeClass("show");
+			jQuery(this).addClass("show");
+			jQuery("#grupompleo_map_wrap_responsive select").val(jQuery(this).data("key"));
 			map.setZoom(16);
 			map.setCenter({ lat: jQuery(this).data("lat"), lng: jQuery(this).data("long") });
 		});
