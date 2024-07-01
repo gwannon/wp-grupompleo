@@ -42,9 +42,9 @@ function wp_grupompleo_map($params = array(), $content = null) {
 			<ul>
 				<?php foreach ($data as $key => $item) { ?>
 					<li data-long="<?=$item[4]?>" data-lat="<?=$item[3]?>" data-key="<?=$key?>">
-						<b><?=$item[0]?></b><br/>
+						<h3><?=$item[0]?></h3>
 						<?=$item[1]?><br/>
-						<a href="tel:<?=$item[2]?>"><?=$item[2]?></a> - <a href="mailto:<?=$item[5]?>"><?=$item[5]?></a><br/>
+						<a href="tel:<?=$item[2]?>"><?=$item[2]?></a> <a href="mailto:<?=$item[5]?>"><?=$item[5]?></a><br/>
 						<a href="https://www.google.com/maps/dir/?api=1&destination=<?=$item[3]?>,<?=$item[4]?>" target="_blank"><?php _e("Cómo llegar", "grupompleo"); ?></a>
 					</li>
 				<?php } ?>
@@ -55,7 +55,6 @@ function wp_grupompleo_map($params = array(), $content = null) {
 	<style>
 		#grupompleo_map_wrap {
 			display: flex;
-			gap: 20px;
 			justify-content: space-between;
 			align-items: stretch;
 			flex-wrap: wrap;
@@ -67,7 +66,7 @@ function wp_grupompleo_map($params = array(), $content = null) {
 
 		#grupompleo_map_wrap #grupompleo_map,
 		#grupompleo_map_wrap #grupompleo_list {
-			width: calc(100% - 20px);
+			width: 100%;
 		}
 
 		#grupompleo_map_wrap #grupompleo_list ul {
@@ -85,18 +84,94 @@ function wp_grupompleo_map($params = array(), $content = null) {
 			margin: 0;
 		}
 
+		#grupompleo_map_wrap #grupompleo_list ul li h3 {
+			font-weight: 700;
+			line-height: 120%;
+			font-size: 19px !important;
+			padding: 0;
+   		margin: 0;
+			color: #fcc501;
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul li a:first-of-type {
+			display: inline-block;
+			padding: 7px 7px 7px 20px;
+			border: 1px solid #f7da7f;
+			position: relative;
+			background-color: #f7da7f;
+			border-radius: 6px;
+			margin: 0 5px 5px 0;
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul li a:first-of-type:before {
+			content: "";
+			display: block;
+			position: absolute;
+			background: transparent url(<?=plugin_dir_url(__FILE__).'images/telefono.svg';?>) center left no-repeat;
+			width: 10px;
+			height: 10px;
+			top: 11px;
+			left: 6px;
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul li a:first-of-type:hover {
+			color: #000;
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul li a:nth-of-type(2) {
+			display: inline-block;
+			padding: 7px 7px 7px 20px;
+			border: 1px solid #f7da7f;
+			position: relative;
+			background-color: #fff;
+			border-radius: 6px;
+			margin: 0 5px 5px 0;
+			word-break: break-word;
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul li a:nth-of-type(2):before {
+			content: "";
+			display: block;
+			position: absolute;
+			background: transparent url(<?=plugin_dir_url(__FILE__).'images/mail.svg';?>) center left no-repeat;
+			width: 10px;
+			height: 10px;
+			top: 13px;
+			left: 6px;
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul li a:nth-of-type(3) {
+			display: inline-block;
+			padding: 7px 7px 7px 25px;
+			border: none;
+			position: relative;
+			border-radius: 6px;
+			margin: 0 5px 0 0;
+		}
+
+		#grupompleo_map_wrap #grupompleo_list ul li a:nth-of-type(3):before {
+			content: "";
+			display: block;
+			position: absolute;
+			background: transparent url(<?=plugin_dir_url(__FILE__).'images/ubicacion.svg';?>) center left no-repeat;
+			width: 14px;
+			height: 15px;
+			top: 10px;
+			left: 6px;
+			background-size: contain;
+		}
+
 		#grupompleo_map_wrap #grupompleo_list ul li.show {
 			display: block;
 		}
 
 		#grupompleo_map_wrap #grupompleo_list ul li:hover,
 		#grupompleo_map_wrap #grupompleo_list ul li.show {
-			background-color: #000;
-			color: #fff;
+			background-color: #f4f4f4;
 		}
 
 		#grupompleo_map_wrap_responsive select {
-			width: calc(100% - 20px);
+			width: 100%;
 			box-sizing: border-box;
 			margin-bottom: 20px;
 		}
@@ -107,11 +182,11 @@ function wp_grupompleo_map($params = array(), $content = null) {
 			}
 
 			#grupompleo_map_wrap #grupompleo_map {
-				width: calc(70% - 20px);
+				width: 65%;
 			} 
 
 			#grupompleo_map_wrap #grupompleo_list {
-				width: calc(30% - 20px);
+				width: 35%;
 			} 
 
 			#grupompleo_map_wrap_responsive select {
