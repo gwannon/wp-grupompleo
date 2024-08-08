@@ -588,7 +588,7 @@ function wp_grupompleo_oferta_404( $template ) {
     $codigo = end(explode("-", get_query_var('oferta_codigo')));
     $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE), true);
     $offer_id = array_search($codigo, array_column($json, 'Codigo'));
-    if($offer_id == '') {
+    if($offer_id === '') {
       status_header( 404 );
       nocache_headers();
       include( get_query_template( '404' ) );
