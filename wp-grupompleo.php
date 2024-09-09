@@ -520,8 +520,8 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
     <span id="numberresults"><?php printf(__("Hemos encontrado <b>%d</b> ofertas de empleo.", 'wp-gruprompleo'), count($json)); ?></span>
   </div>
   <div class="jobs-grid">
-    <?php foreach ($json as $offer) { ?>
-      <div class="jobs-item sede-<?=sanitize_title($offer->Sede)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($offer->Puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Sede));?>">
+    <?php foreach ($json as $offer) { $puesto =  wp_grupompleo_ofertas_dividir_generos($offer->Puesto); ?>
+      <div class="jobs-item sede-<?=sanitize_title($offer->Sede)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Sede));?>">
         <p><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($offer->Delegacion))?></p>
         <p class="place"><?=$offer->provincia?><br/><?=ucfirst(mb_strtolower($offer->Ubicacion))?></p>
         <p class="name"><?=mb_strtolower($offer->Puesto)?></p>
@@ -615,3 +615,19 @@ function wp_grupompleo_change_permalinks($permalink, $post) {
 }; 
 add_filter( 'page_link', 'wp_grupompleo_change_permalinks', 10, 3);
 
+//Divide los opuestos en sus dos versiones de genero
+function wp_grupompleo_ofertas_dividir_generos($puesto) {
+  $words = explode(" ", $puesto);
+  foreach ($words as $key => $word) {
+    if(preg_match("/(o\/a|a\/o|as\/os|os\/as|e\/a|es\/as|a\/e|as\/es)/i", $word)) { 
+      $first = substr($word, 0, strpos($word, '/'));
+      $second = substr($word, (strpos($word, '/') + 1));
+      $words[$key] = $first." ".substr($first, 0, (strlen($first) - strlen($second))).$second;
+    } else if(preg_match("/(r\/a)/", $word)) { 
+      $first = substr($word, 0, strpos($word, '/'));
+      $second = substr($word, (strpos($word, '/') + 1));
+      $words[$key] = $first." ".$first.$second;
+    }
+  }
+  return implode(" ", $words);
+}
