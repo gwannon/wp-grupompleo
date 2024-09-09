@@ -355,7 +355,7 @@
   }
 
   .ofheader > div > .shareoffer > span {
-    font-size: 40px;
+    font-size: 30px;
     margin: 0px 5px 10px 5px;
   }
 }
@@ -422,7 +422,7 @@
 
 .oflogo {
   color: #716F68;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 700;
   text-align: center;
   margin-bottom: 30px;
