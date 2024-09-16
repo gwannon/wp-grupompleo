@@ -236,7 +236,7 @@
 .ofheader > div > h1 {
   font-size: 25px !important;
   color: #ffffff;
-  text-transform: lowercase;
+  /*text-transform: lowercase;*/
   margin-bottom: 30px;
 }
 
@@ -274,7 +274,7 @@
 .ofheader > div > h2 {
   font-size: 22px !important;
   color: #ffffff;
-  text-transform: lowercase;
+  /*text-transform: lowercase;*/
   margin-bottom: 30px;
 }
 

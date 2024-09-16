@@ -293,7 +293,7 @@ function wp_grupompleo_ofertas_portadas_shortcode($params = array(), $content = 
       foreach ($newjson as $offer) { ?>
         <div class="jobs-item delegacion-<?=sanitize_title($offer->Delegacion)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($offer->Puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Delegacion));?>">
           <p><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($offer->Delegacion))?></p>
-          <p class="place"><?=$offer->provincia?><br/><?=ucfirst(mb_strtolower($offer->Ubicacion))?></p>
+          <p class="place"><?=$offer->provincia?><br/><?=$offer->Ubicacion?></p>
           <p class="name"><?=mb_strtolower($offer->Puesto)?></p>
           <a href="<?php echo wp_grupompleo_offer_permalink($offer); ?>"><?php _e('Ver oferta', 'wp-gruprompleo'); ?></a>
         </div>
@@ -339,7 +339,7 @@ function wp_grupompleo_ofertas_portadas_slider_shortcode($params = array(), $con
         foreach ($newjson as $offer) { ?>
           <div class="swiper-slide jobs-item">
             <p><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($offer->Delegacion))?></p>
-            <p class="place"><?=$offer->provincia?><br/><?=ucfirst(mb_strtolower($offer->Ubicacion))?></p>
+            <p class="place"><?=$offer->provincia?><br/><?=$offer->Ubicacion?></p>
             <p class="name"><?=mb_strtolower($offer->Puesto)?></p>
             <a href="<?php echo wp_grupompleo_offer_permalink($offer); ?>"><?php _e('Ver oferta', 'wp-gruprompleo'); ?></a>
           </div>
@@ -523,16 +523,16 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
     <?php foreach ($json as $offer) { $puesto =  wp_grupompleo_ofertas_dividir_generos($offer->Puesto); ?>
       <div class="jobs-item sede-<?=sanitize_title($offer->Sede)?> tipo-<?=sanitize_title($offer->Tipo)?> provincia-<?=sanitize_title($offer->provincia); ?> ubicacion-<?=sanitize_title($offer->Ubicacion); ?>" data-category="<?=sanitize_title($offer->Tipo)?>" data-search="<?php echo str_replace("-", " ", sanitize_title($puesto." ".$offer->provincia." ".$offer->Ubicacion." ".$offer->Tipo." ".$offer->Sede));?>">
         <p><?=str_replace("mpleo", "<span>mpleo</span>", mb_strtolower($offer->Delegacion))?></p>
-        <p class="place"><?=$offer->provincia?><br/><?=ucfirst(mb_strtolower($offer->Ubicacion))?></p>
+        <p class="place"><?=$offer->provincia?><br/><?=$offer->Ubicacion?></p>
         <p class="name"><?=mb_strtolower($offer->Puesto)?></p>
         <a href="<?php echo wp_grupompleo_offer_permalink($offer); ?>"><?php _e("Ver oferta", 'wp-gruprompleo'); ?></a>
       </div>
     <?php } ?>
   </div>
   <div id="noresults">
-    <p><?php _e("Parece que no hemos encontrado lo que buscas<span></span>.", 'wp-gruprompleo'); ?></p>
-    <p><?php _e("Chequea cómo lo has escrito o utiliza sinónimos.", 'wp-gruprompleo'); ?></p>
-    <p><strong><?php _e("¡Vuelve a intentarlo!", 'wp-gruprompleo'); ?></strong></p>
+    <p><?php _e("parece que no hemos encontrado lo que buscas<span></span>.", 'wp-gruprompleo'); ?></p>
+    <p><?php _e("Chequea cómo lo has escrito, utiliza sinónimos o cambia los filtros de búsqueda.", 'wp-gruprompleo'); ?></p>
+    <p><strong><?php _e("¡vuelve a intentarlo!", 'wp-gruprompleo'); ?></strong></p>
     <img src="/wp-content/uploads/2024/04/error-busqueda.png" alt="">
   </div>
   <style>
