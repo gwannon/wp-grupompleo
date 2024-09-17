@@ -139,7 +139,7 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
     <div class="ofheader">
       <div>
         <div><a href="<?php echo get_home_url(); ?>">home</a> - <a href="<?php echo get_the_permalink(WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID); ?>">ofertas de empleo</a> - <?php echo $extras[0]->OFPUESTOVACANTE; ?></a></div>
-        <h1><?php printf(__('%s en %s', "wp-gruprompleo"), $extras[0]->OFPUESTOVACANTE, $extras[0]->OFUBICACION);?></h1>
+        <h1><?php printf(__('%s en %s', "wp-gruprompleo"), mb_strtolower($extras[0]->OFPUESTOVACANTE), $extras[0]->OFUBICACION);?></h1>
         <?php
           if (!is_numeric($extras[0]->OFSALARIO)) $extras[0]->OFSALARIO = intval($extras[0]->OFSALARIO);
           if($extras[0]->OFSALARIO == 0) {
