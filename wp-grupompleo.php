@@ -172,7 +172,7 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
         <ul>
           <?php 
             if(trim($extras[0]->OFTIPOCONTRATO) != '') echo "<li><i class='fa-file fas'></i> ".trim($extras[0]->OFTIPOCONTRATO)."</li>";
-            if(trim($extras[0]->OFDESCTIPOCONTRATO) != '') echo "<li><i class='fas fa-file-alt'></i></i> ".trim($extras[0]->OFDESCTIPOCONTRATO)."</li>";
+            //if(trim($extras[0]->OFDESCTIPOCONTRATO) != '') echo "<li><i class='fas fa-file-alt'></i></i> ".trim($extras[0]->OFDESCTIPOCONTRATO)."</li>";
             if(trim($extras[0]->OFVARIABLE) != '') echo "<li><i class='fas fa-star'></i> ".trim($extras[0]->OFVARIABLE)."</li>";
             //if(trim($extras[0]->OFJORNADA) != '') echo "<li><i class='fa-clock fas'></i> ".trim($extras[0]->OFJORNADA)."</li>";
             if(trim($extras[0]->OFHORARIO) != '')  echo "<li><i class='fa-clock fas'></i> ".trim($extras[0]->OFHORARIO)."</li>";
@@ -399,7 +399,7 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
   <div class="filters-button-group">
     <div class="button-group"><h2><?php _e("<span>Empleos en el</span> Buscador", 'wp-gruprompleo');/*_e("Buscador <span>de trabajo</span>", 'wp-gruprompleo');*/ ?></h3>
     <input type="text" placeholder="<?php _e('Buscar', 'wp-gruprompleo'); ?>"
-      <?php echo(isset($_GET['search']) || isset($buscaroferta['search']) ? " ".(isset($_GET['search']) ? "value='".strip_tags($_GET['search']).'"' : (isset($buscaroferta['search']) && $buscaroferta['search'] != '' ? "value='".$buscaroferta['search']."'" : ""))."'" : ""); ?> 
+      <?php echo(isset($_GET['search']) || isset($buscaroferta['search']) ? " ".(isset($_GET['search']) ? "value='".strip_tags($_GET['search'])."'" : (isset($buscaroferta['search']) && $buscaroferta['search'] != '' ? "value='".$buscaroferta['search']."'" : ""))."'" : ""); ?> 
         <?=((isset($_GET['search']) && $_GET['search'] != '') || (isset($buscaroferta['search']) && $buscaroferta['search'] != '') ? " class='quicksearch selected'": " class='quicksearch'")?>/></div>
     <?php $json = json_decode(file_get_contents(WP_GRUPOMPLEO_FILTERS_CACHE_FILE));
       foreach ($json as $title => $group) { ?>
@@ -407,13 +407,13 @@ function wp_grupompleo_ofertas_con_filtro_shortcode($params = array(), $content 
         <h2><span><?php _e('Empleos por', 'wp-gruprompleo'); ?></span><?=($title == 'Ubicacion' ? "Provincia" : ($title == 'Tipo' ? "Contratación" : $title))?></h2>
         <?php if($title != 'Ubicacion') { ?>
           <select name="<?php $sanitize_title = sanitize_title($title); echo $sanitize_title; ?>"<?=((isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] != '') || (isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] != '') ? " class='selected'": "")?>>
-            <option value="">Todas</option>
+            <option value=""><?php _e("Todas", 'wp-gruprompleo'); ?></option>
             <?php foreach ($group as $button) {  ?>
               <option value="<?=$sanitize_title; ?>-<?=sanitize_title($button); ?>"<?=(isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] == sanitize_title($button) ? " selected='selected'" : ( isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] == $sanitize_title."-".sanitize_title($button) ? " selected='selected'" : ""))?>><?=($button == 'Directa' ? "Directa a través de empresa" : ($button == 'ETT' ? "A través de ETT" : $button))?></option>
             <?php } ?>
           </select>
         <?php } else { $sanitize_title = sanitize_title($title); ?>
-          <select name="<?=$sanitize_title?>" id="select-<?=$sanitize_title?>"<?=((isset($_GET[$sanitize_title]) && $_GET[$sanitize_title] != '') || (isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] != '') ? " class='selected'": "")?>>
+          <select name="<?=$sanitize_title?>" id="select-<?=$sanitize_title?>"<?=((isset($_GET['provincia']) && $_GET['provincia'] != '') || (isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] != '') ? " class='selected'": "")?>>
             <option value=""><?php _e("Todos", 'wp-gruprompleo'); ?></option>
             <?php foreach ($group as $label => $cities) { ?>
               <option value="provincia-<?=sanitize_title($label); ?>"<?=(isset($_GET['provincia']) && $_GET['provincia'] == $label ? " selected='selected'" : (isset($buscaroferta[$sanitize_title]) && $buscaroferta[$sanitize_title] == "provincia-".sanitize_title($label) ? " selected='selected'" : ""))?>><?=$label?></option>
