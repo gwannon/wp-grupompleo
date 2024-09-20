@@ -44,6 +44,12 @@
   padding: 25px;
 }
 
+@media screen and (max-width: 600px) {
+  .jobs-item > p:first-of-type {
+    font-size:20px !important;
+  }
+}
+
 .jobs-item > p:first-of-type > span {
   font-weight: 400;
   font-style: italic;
