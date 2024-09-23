@@ -72,6 +72,20 @@ function debounce( fn, threshold ) {
       fn.apply( _this, args );
     }
     cookieUpdate();
+
+    /*console.log("Búsqueda event 1");
+    console.log({
+      "busqueda": jQuery(".quicksearch").val(),
+      'ubicacion': jQuery('#select-ubicacion').val(),
+      'tipo': jQuery('select[name=tipo]').val(),
+    });*/
+    gtag('event', 'busqueda_ofertas', {
+      "busqueda": jQuery(".quicksearch").val(),
+      'ubicacion': jQuery('#select-ubicacion').val(),
+      'tipo': jQuery('select[name=tipo]').val(),
+    });
+
+    gtag('event', 'PruebClick', {});
     timeout = setTimeout( delayed, threshold );
   };
 }
@@ -80,6 +94,18 @@ document.querySelectorAll(".filters-button-group input[type='radio'], .filters-b
   element.addEventListener('change',function(){
 
     cookieUpdate();
+    /*console.log("Búsqueda event 2");
+    console.log({
+      "busqueda": jQuery(".quicksearch").val(),
+      'ubicacion': jQuery('#select-ubicacion').val(),
+      'tipo': jQuery('select[name=tipo]').val(),
+    });*/
+
+    gtag('event', 'busqueda_ofertas', {
+      "busqueda": jQuery(".quicksearch").val(),
+      'ubicacion': jQuery('#select-ubicacion').val(),
+      'tipo': jQuery('select[name=tipo]').val(),
+    });
 
     jQuery("#noresults").removeClass("show");
     selectedRadios = [];
@@ -152,7 +178,7 @@ function cookieUpdate() {
     checks.push(jQuery(this).val());
     
   });
-  console.log(checks);
+  //console.log(checks);
   var filters = {
     'ubicacion': jQuery('#select-ubicacion').val(),
     'localizacion': checks,

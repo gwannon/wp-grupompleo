@@ -161,7 +161,7 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
           <span><a href="https://api.whatsapp.com/send?text=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>" target="_blank" rel="noopener noreferrer" title="" aria-label="WhatsApp" data-placement="top" data-toggle="tooltip" data-title="WhatsApp" data-="" data-original-title="WhatsApp"><i class="fusion-social-network-icon fusion-tooltip fusion-whatsapp awb-icon-whatsapp" style="color:#ffffff;" aria-hidden="true"></i></a></span>
           <span><a href="mailto:?subject=<?php echo urlencode($extras[0]->OFPUESTOVACANTE); ?>&amp;body=<?php echo urlencode(wp_grupompleo_offer_permalink($extras[0])); ?>" target="_self" title="" aria-label="Correo electrónico" data-placement="top" data-toggle="tooltip" data-title="Correo electrónico" data-original-title="Correo electrónico"><i class="fusion-social-network-icon fusion-tooltip fusion-mail awb-icon-mail" style="color:#ffffff;" aria-hidden="true"></i></a></span>
           <?php if($extras[0]->OFVISIBLEENWEB == 1) { ?>
-            <br/><a href="<?php echo $extras[0]->OFLINKINSCRIPCION; ?>"><?php _e("inscribirme a esta oferta", 'wp-gruprompleo'); ?></a>
+            <br/><a id="inscribirse-oferta-1" href="<?php echo $extras[0]->OFLINKINSCRIPCION; ?>"><?php _e("inscribirme a esta oferta", 'wp-gruprompleo'); ?></a>
           <?php } ?>
         </div>
       </div>
@@ -181,7 +181,7 @@ function wp_grupompleo_oferta_shortcode($params = array(), $content = null) {
         </ul>
         <div class="ofboton">
           <?php if($extras[0]->OFVISIBLEENWEB == 1) { ?>
-          <a href="<?php echo $extras[0]->OFLINKINSCRIPCION; ?>"><?php _e("inscribirme a esta oferta", 'wp-gruprompleo'); ?></a>
+          <a id="inscribirse-oferta-2" href="<?php echo $extras[0]->OFLINKINSCRIPCION; ?>"><?php _e("inscribirme a esta oferta", 'wp-gruprompleo'); ?></a>
           <?php } else { ?>
             <p><b><?php _e("Esta oferta ya ha sido cubierta, pero muchos/as han encontrado su puesto ideal explorando nuestras vacantes, ¡encuentra el tuyo!", 'wp-gruprompleo'); ?></b></p>
             <a href="<?php echo get_the_permalink(WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID); ?>"><?php _e("buscar empleo", 'wp-gruprompleo'); ?></a>
