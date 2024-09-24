@@ -610,7 +610,7 @@ function wp_grupompleo_oferta_404( $template ) {
 
 //Enlace con hash en las urls a la página de búsqueda de empleo
 function wp_grupompleo_change_permalinks($permalink, $post) { 
-  if($post == WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID) return add_query_arg(['hash' => hash('md5', date("mdHis").rand(1,100000))], $permalink);
+  if($post == WP_GRUPOMPLEO_SEARCH_OFFERS_PAGE_ID && !is_admin()) return add_query_arg(['hash' => hash('md5', date("mdHis").rand(1,100000))], $permalink);
   else return $permalink; 
 }; 
 add_filter( 'page_link', 'wp_grupompleo_change_permalinks', 10, 3);
