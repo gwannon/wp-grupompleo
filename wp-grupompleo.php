@@ -48,6 +48,19 @@ add_action( 'wp_ajax_nopriv_grupompleo_ofertas', 'wp_grupompleo_ofertas_cache' )
 function wp_grupompleo_ofertas_cache() {
   if(!file_exists(WP_GRUPOMPLEO_OFFERS_CACHE_FILE) || (time() - filemtime(WP_GRUPOMPLEO_OFFERS_CACHE_FILE)) > /*(60*4)*/ 5) {
     $json = file_get_contents(WP_GRUPOMPLEO_ENDPOINT_JOBS);
+
+    //Log
+    date_default_timezone_set("Europe/Madrid");
+    $f = fopen(plugin_dir_path(__FILE__)."log.txt", "a+");
+    fwrite($f, date("Y-m-d H:i:s").",".count(json_decode($json, true))." ofertas"."\n");
+    fclose($f);
+    if(count(json_decode($json, true)) == 0) {
+      $headers = "MIME-Version: 1.0\r\n" . 
+        "Content-Type: text/html; charset=UTF-8";
+      wp_mail("jorge@enutt.net", "0 ofertas de empleo sacadas", "LOG => https://www.grupompleo.com/wp-content/plugins/wp-grupompleo/log.txt", $headers);
+    }
+
+
     file_put_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE, $json);
     $filters = [
       //'Sede' => [],
@@ -588,12 +601,13 @@ function wp_grupompleo_oferta_404( $template ) {
     $codigo = end(explode("-", get_query_var('oferta_codigo')));
     $json = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE), true);
     $offer_id = array_search($codigo, array_column($json, 'Codigo'));
-    if($offer_id === '') {
+    echo "<!-- offer ". $offer_id." -->";
+    if($offer_id == '' && $offer_id !== 0) {
       status_header( 404 );
       nocache_headers();
       include( get_query_template( '404' ) );
       die();
-    }
+    } 
     //Si la oferta existe pero la URL es diferente 
     $offer = json_decode(file_get_contents(WP_GRUPOMPLEO_OFFERS_CACHE_FILE))[$offer_id];
     $currentlink = (is_ssl() ? 'https://' : 'http://'). $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
