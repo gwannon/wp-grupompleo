@@ -47,17 +47,21 @@ add_action( 'wp_ajax_grupompleo_ofertas', 'wp_grupompleo_ofertas_cache' );
 add_action( 'wp_ajax_nopriv_grupompleo_ofertas', 'wp_grupompleo_ofertas_cache' );
 function wp_grupompleo_ofertas_cache() {
   if(!file_exists(WP_GRUPOMPLEO_OFFERS_CACHE_FILE) || (time() - filemtime(WP_GRUPOMPLEO_OFFERS_CACHE_FILE)) > /*(60*4)*/ 5) {
-    $json = file_get_contents(WP_GRUPOMPLEO_ENDPOINT_JOBS);
-
-    //Log
     date_default_timezone_set("Europe/Madrid");
+    $log = date("Y-m-d H:i:s");
+
+    $json = file_get_contents(WP_GRUPOMPLEO_ENDPOINT_JOBS);
+    //Log
+    $log = $log.",".date("Y-m-d H:i:s").",".count(json_decode($json, true))." ofertas"."\n";
     $f = fopen(plugin_dir_path(__FILE__)."log.txt", "a+");
-    fwrite($f, date("Y-m-d H:i:s").",".count(json_decode($json, true))." ofertas"."\n");
+    fwrite($f, $log);
     fclose($f);
     if(count(json_decode($json, true)) == 0) {
       $headers = "MIME-Version: 1.0\r\n" . 
         "Content-Type: text/html; charset=UTF-8";
-      wp_mail("jorge@enutt.net", "0 ofertas de empleo sacadas", "LOG => https://www.grupompleo.com/wp-content/plugins/wp-grupompleo/log.txt", $headers);
+      wp_mail("jorge@enutt.net", "0 ofertas de empleo sacadas", $log."\n\nLOG => https://www.grupompleo.com/wp-content/plugins/wp-grupompleo/log.txt\n\nRespuesta servidor:\n\n".$json, $headers);
+      wp_mail("aochandorena@grupompleo.com", "0 ofertas de empleo sacadas", $log."\n\nLOG => https://www.grupompleo.com/wp-content/plugins/wp-grupompleo/log.txt\n\nRespuesta servidor:\n\n".$json, $headers);
+      return;
     }
 
 
